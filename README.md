@@ -21,7 +21,7 @@ Krypttrac — A premium crypto dashboard for kings. Real-time prices, neon glass
 
 ## Getting Started
 
-```bash
+\`\`\`bash
 # Install dependencies
 npm install
 
@@ -36,13 +36,13 @@ npm start
 
 # Run linter
 npm run lint
-```
+\`\`\`
 
 Open [http://localhost:3000](http://localhost:3000) to see the dashboard.
 
 ## Project Structure
 
-```
+\`\`\`
 krypttrac.com/
 ├── app/
 │   ├── globals.css          # Enhanced glassmorphism styles
@@ -62,7 +62,7 @@ krypttrac.com/
 ├── types/
 │   └── crypto.ts            # TypeScript type definitions
 └── public/                  # Static assets
-```
+\`\`\`
 
 ## Step 1 – Dashboard Shell
 
