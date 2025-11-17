@@ -9,9 +9,10 @@ import GlassCard from './GlassCard';
 interface TopMoversProps {
   cryptos: CryptoData[];
   type: 'gainers' | 'losers';
+  isLoading?: boolean;
 }
 
-export default function TopMovers({ cryptos, type }: TopMoversProps) {
+export default function TopMovers({ cryptos, type, isLoading = false }: TopMoversProps) {
   const sorted = [...cryptos].sort((a, b) => {
     if (type === 'gainers') {
       return b.price_change_percentage_24h - a.price_change_percentage_24h;
@@ -38,29 +39,51 @@ export default function TopMovers({ cryptos, type }: TopMoversProps) {
       </div>
 
       <div className="space-y-3">
-        {top5.map((crypto, index) => {
-          const isPositive = crypto.price_change_percentage_24h >= 0;
-          return (
+        {isLoading ? (
+          // Loading shimmer state
+          Array.from({ length: 5 }).map((_, index) => (
             <div
-              key={crypto.id}
-              className="flex items-center justify-between p-4 rounded-xl glass hover:glass-strong transition-all duration-200 group"
+              key={index}
+              className="flex items-center justify-between p-4 rounded-xl glass animate-pulse"
             >
               <div className="flex items-center gap-3">
-                <span className="text-gray-500 font-bold text-lg w-8">#{index + 1}</span>
+                <div className="w-8 h-6 bg-white/10 rounded"></div>
                 <div>
-                  <p className="text-white font-semibold text-lg group-hover:text-purple-300 transition-colors">{crypto.name}</p>
-                  <p className="text-sm text-gray-400 uppercase tracking-wider">{crypto.symbol}</p>
+                  <div className="h-5 w-24 bg-white/10 rounded mb-2"></div>
+                  <div className="h-4 w-16 bg-white/10 rounded"></div>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-white font-semibold text-lg">{formatPrice(crypto.current_price)}</p>
-                <p className={`text-sm font-bold ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
-                  {formatPercentage(crypto.price_change_percentage_24h)}
-                </p>
+                <div className="h-5 w-20 bg-white/10 rounded mb-2"></div>
+                <div className="h-4 w-16 bg-white/10 rounded"></div>
               </div>
             </div>
-          );
-        })}
+          ))
+        ) : (
+          top5.map((crypto, index) => {
+            const isPositive = crypto.price_change_percentage_24h >= 0;
+            return (
+              <div
+                key={crypto.id}
+                className="flex items-center justify-between p-4 rounded-xl glass hover:glass-strong transition-all duration-200 group"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-500 font-bold text-lg w-8">#{index + 1}</span>
+                  <div>
+                    <p className="text-white font-semibold text-lg group-hover:text-purple-300 transition-colors">{crypto.name}</p>
+                    <p className="text-sm text-gray-400 uppercase tracking-wider">{crypto.symbol}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-white font-semibold text-lg">{formatPrice(crypto.current_price)}</p>
+                  <p className={`text-sm font-bold ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                    {formatPercentage(crypto.price_change_percentage_24h)}
+                  </p>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </GlassCard>
   );

@@ -4,6 +4,18 @@ import { CryptoData } from '@/types/crypto';
  * Mock crypto market data for development
  * This replaces real API calls temporarily during the redesign
  */
+
+// Generate sample sparkline data
+function generateSparkline(basePrice: number, volatility: number = 0.05): number[] {
+  const points: number[] = [];
+  let price = basePrice * 0.95; // Start slightly lower
+  for (let i = 0; i < 168; i++) { // 7 days * 24 hours
+    price = price * (1 + (Math.random() - 0.5) * volatility);
+    points.push(price);
+  }
+  return points;
+}
+
 export const mockCryptoData: CryptoData[] = [
   {
     id: 'bitcoin',
@@ -31,6 +43,9 @@ export const mockCryptoData: CryptoData[] = [
     atl_change_percentage: 144180.23,
     atl_date: '2013-07-06T00:00:00.000Z',
     last_updated: '2025-11-17T17:00:00.000Z',
+    sparkline_in_7d: {
+      price: generateSparkline(97842.50, 0.03)
+    },
   },
   {
     id: 'ethereum',

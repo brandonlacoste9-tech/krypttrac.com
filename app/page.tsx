@@ -1,16 +1,53 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { CryptoData } from '@/types/crypto';
 import { mockCryptoData, getTopGainers, getTopLosers } from '@/lib/mockMarkets';
+import { getTopGainersFromData, getTopLosersFromData } from '@/lib/markets';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import StatCards from '@/components/StatCards';
 import TopMovers from '@/components/TopMovers';
 
 export default function Home() {
-  // Use mock data for now
-  const cryptos = mockCryptoData;
-  const gainers = getTopGainers(5);
-  const losers = getTopLosers(5);
+  const [cryptos, setCryptos] = useState<CryptoData[]>(mockCryptoData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchMarketData() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await fetch('/api/markets?limit=25');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch market data');
+        }
+        
+        const data = await response.json();
+        setCryptos(data.coins);
+      } catch (err) {
+        console.error('Error fetching market data:', err);
+        setError('Using cached data');
+        // Keep using mock data on error
+        setCryptos(mockCryptoData);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchMarketData();
+    
+    // Refresh data every 60 seconds
+    const interval = setInterval(fetchMarketData, 60000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const gainers = getTopGainersFromData(cryptos, 5);
+  const losers = getTopLosersFromData(cryptos, 5);
 
   return (
     <div className="min-h-screen bg-deep-space">
@@ -29,12 +66,19 @@ export default function Home() {
 
         {/* Top Movers Section */}
         <div className="mb-12">
-          <h2 className="text-4xl font-bold text-white mb-8 text-center">
-            <span className="text-gradient">Market Movers</span>
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <h2 className="text-4xl font-bold text-white text-center">
+              <span className="text-gradient">Market Movers</span>
+            </h2>
+            {error && (
+              <span className="px-3 py-1 text-xs font-medium rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                {error}
+              </span>
+            )}
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <TopMovers cryptos={gainers} type="gainers" />
-            <TopMovers cryptos={losers} type="losers" />
+            <TopMovers cryptos={gainers} type="gainers" isLoading={isLoading} />
+            <TopMovers cryptos={losers} type="losers" isLoading={isLoading} />
           </div>
         </div>
       </main>

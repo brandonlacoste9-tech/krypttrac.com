@@ -8,8 +8,8 @@ Krypttrac — A premium crypto dashboard for kings. Real-time prices, neon glass
 - **Hero Section**: Eye-catching logo, "Built for Kings" tagline, and CTA buttons
 - **Stat Cards**: Portfolio value, real-time updates, and premium status indicators
 - **Market Movers**: Top Gainers and Top Losers 24h with live data
+- **Live Markets**: Real-time crypto market data from CoinGecko API with graceful fallback to mock data
 - **Fully Responsive**: Mobile-first design that looks KOOL AF on all devices
-- **Mock Data**: Development data in `lib/mockMarkets.ts` (no API calls yet)
 
 ## Tech Stack
 
@@ -39,6 +39,17 @@ npm run lint
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the dashboard.
+
+### Environment Variables (Optional)
+
+Create a `.env.local` file in the root directory to configure the market data API:
+
+```bash
+# Optional: Custom API endpoint (defaults to CoinGecko)
+NEXT_PUBLIC_MARKET_API_BASE=https://api.coingecko.com/api/v3
+```
+
+If the API fails or is unavailable, the app automatically falls back to mock data to ensure it works in all environments.
 
 ## Project Structure
 
@@ -75,9 +86,18 @@ This is Step 1 of the Krypttrac redesign, focusing on:
 - ✅ Mobile-first responsive design
 - ✅ Mock data implementation
 
+## Step 2 – Live Markets Integration
+
+Step 2 adds real-time market data integration:
+- ✅ Real-time crypto market data from CoinGecko API
+- ✅ Server-side API route with 60-second caching
+- ✅ Automatic fallback to mock data if API fails
+- ✅ Loading shimmer states for better UX
+- ✅ Subtle error indicators
+- ✅ Configurable API endpoint via environment variables
+
 ## Next Steps
 
-- Add real-time API integration
 - Implement watchlist functionality
 - Add portfolio tracking
 - Create alerts system
