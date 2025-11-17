@@ -41,10 +41,10 @@ export default function WatchlistPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-deep-space">
       <Header />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 page-transition">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <Star className="text-yellow-400" size={32} />
@@ -72,7 +72,7 @@ export default function WatchlistPage() {
               </p>
               <a
                 href="/"
-                className="inline-block px-6 py-3 glass rounded-lg hover:glass-strong transition-all duration-200 text-white font-semibold"
+                className="inline-block px-6 py-3 glass rounded-lg hover:glass-strong hover:neon-glow transition-all duration-300 text-white font-semibold hover:scale-105"
               >
                 Browse Cryptocurrencies
               </a>
