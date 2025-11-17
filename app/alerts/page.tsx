@@ -53,10 +53,10 @@ export default function AlertsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-deep-space">
       <Header />
       
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 page-transition">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -65,7 +65,7 @@ export default function AlertsPage() {
             </div>
             <button
               onClick={() => setShowAddForm(!showAddForm)}
-              className="flex items-center gap-2 px-4 py-2 glass rounded-lg hover:glass-strong transition-all duration-200 text-white font-semibold"
+              className="flex items-center gap-2 px-4 py-2 glass rounded-lg hover:glass-strong hover:neon-glow transition-all duration-300 text-white font-semibold hover:scale-105"
             >
               <Plus size={20} />
               Add Alert
@@ -137,13 +137,13 @@ export default function AlertsPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={addAlert}
-                  className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-semibold transition-all duration-200"
+                  className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:scale-105"
                 >
                   Create Alert
                 </button>
                 <button
                   onClick={() => setShowAddForm(false)}
-                  className="px-4 py-2 glass hover:glass-strong rounded-lg text-white font-semibold transition-all duration-200"
+                  className="px-4 py-2 glass hover:glass-strong rounded-lg text-white font-semibold transition-all duration-300"
                 >
                   Cancel
                 </button>
@@ -162,7 +162,7 @@ export default function AlertsPage() {
               </p>
               <button
                 onClick={() => setShowAddForm(true)}
-                className="inline-flex items-center gap-2 px-6 py-3 glass rounded-lg hover:glass-strong transition-all duration-200 text-white font-semibold"
+                className="inline-flex items-center gap-2 px-6 py-3 glass rounded-lg hover:glass-strong hover:neon-glow transition-all duration-300 text-white font-semibold hover:scale-105"
               >
                 <Plus size={20} />
                 Add Your First Alert
