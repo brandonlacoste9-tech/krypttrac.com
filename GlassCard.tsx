@@ -764,7 +764,7 @@ Real-time prices, a sexy watchlist, and top movers – without the clutter.
 
 ## Getting Started
 
-```bash
+\`\`\`bash
 npm install
 npm run dev
 
@@ -788,7 +788,7 @@ Auth + cloud sync
 
 Use the Node template + this:
 
-```gitignore
+\`\`\`gitignore
 node_modules/
 .next/
 out/
