@@ -1,0 +1,40 @@
+{
+  "name": "krypttrac.com",
+  "version": "1.0.0",
+  "description": "Krypttrac — A clean, modern crypto dashboard for kings. Real-time prices, glass UI, watchlists, movers, alerts, and a slick user experience without the clutter. Built for speed, style, and simplicity.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.22",
+    "axios": "^1.13.2",
+    "chart.js": "^4.5.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.0.3",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.554.0",
+    "next": "^14.2.33",
+    "postcss": "^8.5.6",
+    "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3",
+    "zustand": "^5.0.8"
+  }
+}
