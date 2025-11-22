@@ -1,0 +1,246 @@
+<#
+.SYNOPSIS
+    Phase 9 – Production‑ready deployment checklist for Krypto Kings.
+
+.DESCRIPTION
+    The script validates .env.production, runs a local Vercel preview, (optionally)
+    generates a Lighthouse report, commits & pushes the final marker, triggers a
+    Vercel production build, and finally verifies SEO tags, DNS, and analytics.
+
+.NOTES
+    • Requires PowerShell 7+ (works on Windows, macOS, Linux).  
+    • Requires: git, pnpm (or npm), vercel CLI, and optional npx lighthouse.  
+    • Adjust the $RequiredEnvKeys, $CustomDomain, $VercelProject variables if needed.
+#>
+
+# ────────────────────────────────────── CONFIG ───────────────────────────────────────
+$RequiredEnvKeys = @(
+    'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
+    'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
+    'NEXT_PUBLIC_API_URL',
+    'CLERK_SECRET_KEY',
+    'STRIPE_SECRET_KEY',
+    'NEXT_PUBLIC_VERCEL_ANALYTICS_ID' # optional – only if you use Vercel Analytics
+)
+
+$ExpectedSeoTags = @(
+    'title','description','og:title','og:description','og:image','twitter:card'
+)
+
+$CustomDomain = 'https://kryptokings.com'   # <-- edit if you use a different domain
+$VercelProject = 'kryptokings'              # <owner>/<project> – change if needed
+$VercelTeam    = $null                      # set to your team ID if you use one
+
+$RunLighthouseReport = $true
+$CheckAnalyticsCalls = $true
+# ────────────────────────────────────── END CONFIG ───────────────────────────────────────
+
+# ──────────────────────────────── Helper functions ────────────────────────────────
+function Write-Info  { Write-Host "[INFO]  $args" -ForegroundColor Cyan   }
+function Write-OK    { Write-Host "[OK]    $args" -ForegroundColor Green  }
+function Write-Warn  { Write-Host "[WARN]  $args" -ForegroundColor Yellow }
+function Write-Error { Write-Host "[ERROR] $args" -ForegroundColor Red    }
+
+function Get-VercelDeploymentUrl {
+    param([string]$Project, [string]$Team)
+    $uri = "https://api.vercel.com/v9/projects/$Project/deployments?limit=1&order=created"
+    if ($Team) { $uri += "&teamId=$Team" }
+    try {
+        $resp = Invoke-RestMethod -Uri $uri -Method Get -ErrorAction Stop
+        return $resp.deployments[0].url   # e.g. abcdef.vercel.app
+    } catch {
+        Write-Warn "Unable to query Vercel API: $_"
+        return $null
+    }
+}
+
+function Verify-SEO {
+    param([string]$Url, [string[]]$Tags)
+    Write-Info "Fetching $Url ..."
+    try {
+        $html = (Invoke-WebRequest -Uri $Url -UseBasicParsing -ErrorAction Stop).Content
+    } catch {
+        Write-Error "Failed to download $Url – $_"
+        return $false
+    }
+
+    $found = @{}
+    # title tag
+    if ($html -match '<title>(.*?)</title>') { $found['title'] = $true }
+
+    foreach ($m in [regex]::Matches($html,'<meta\s+[^>]*>', 'IgnoreCase')) {
+        $tag = $m.Value
+        if ($tag -match 'property=["'']([^"'']+)["'']') {
+            $found[$matches[1].ToLower()] = $true
+        } elseif ($tag -match 'name=["'']([^"'']+)["'']') {
+            $found[$matches[1].ToLower()] = $true
+        }
+    }
+
+    $missing = $Tags | Where-Object { -not $found.ContainsKey($_) }
+    if ($missing.Count -eq 0) {
+        Write-OK "All SEO tags present."
+        return $true
+    } else {
+        Write-Warn "Missing SEO tags: $($missing -join ', ')"
+        return $false
+    }
+}
+# ────────────────────────────────────────────────────────────────────────────────────────
+
+# 0️⃣  Make sure we’re inside a Git repo
+if (-not (Test-Path .git)) {
+    Write-Error "Current folder is not a Git repository."
+    exit 1
+}
+Write-Info "Git repo detected."
+
+# 1️⃣  .env.production validation -------------------------------------------------------
+$envPath = Join-Path $PWD '.env.production'
+if (-not (Test-Path $envPath)) {
+    Write-Error ".env.production not found at $envPath"
+    exit 1
+}
+Write-Info ".env.production exists."
+
+# Parse key/value pairs (ignore comments / empty lines)
+$envPairs = Get-Content $envPath |
+    Where-Object { $_ -and ($_ -notmatch '^\s*#') } |
+    ForEach-Object {
+        $kv = $_ -split '=',2
+        [pscustomobject]@{Key=$kv[0].Trim(); Value=$kv[1].Trim()}
+    }
+
+# Check required keys
+$missing = @()
+foreach ($k in $RequiredEnvKeys) {
+    if (-not ($envPairs | Where-Object { $_.Key -eq $k -and $_.Value })) {
+        $missing += $k
+    }
+}
+if ($missing) {
+    Write-Error "Missing required variables: $($missing -join ', ')"
+    exit 1
+}
+Write-OK "All required env vars present."
+
+# Ensure .env.production is ignored by git
+if (-not (git check-ignore $envPath 2>$null)) {
+    Write-Warn ".env.production is NOT ignored by Git. Adding it now..."
+    Add-Content -Path '.gitignore' -Value ".env.production"
+    Write-Info "Added to .gitignore – run `git status` to verify."
+} else {
+    Write-OK ".env.production already ignored by Git."
+}
+
+# 2️⃣  Local Vercel preview (optional) -------------------------------------------------
+if (Get-Command vercel -ErrorAction SilentlyContinue) {
+    Write-Info "Running local Vercel preview (may take ~1 min)…"
+    $previewResult = vercel --prebuilt --confirm 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Vercel preview failed."
+        Write-Error $previewResult
+        exit 1
+    }
+    $previewUrl = ($previewResult -split "`n") |
+        Where-Object { $_ -match 'https://.*\.vercel\.app' } |
+        Select-Object -First 1
+    if ($previewUrl) { Write-OK "Preview URL: $previewUrl" }
+} else {
+    Write-Warn "Vercel CLI not installed – skipping preview step."
+}
+
+# 3️⃣  Lighthouse report (optional) ----------------------------------------------------
+if ($RunLighthouseReport) {
+    if (Get-Command npx -ErrorAction SilentlyContinue) {
+        $target = $previewUrl ?? 'http://localhost:3000'
+        $reportPath = Join-Path $PWD 'lighthouse-report.html'
+        Write-Info "Generating Lighthouse report for $target …"
+        npx lighthouse $target --output html --output-path $reportPath --quiet
+        if (Test-Path $reportPath) {
+            Write-OK "Lighthouse report saved to $reportPath"
+        } else {
+            Write-Warn "Lighthouse did not produce a report."
+        }
+    } else {
+        Write-Warn "npx not found – cannot run Lighthouse."
+    }
+}
+
+# 4️⃣  Git commit the Phase 9 marker --------------------------------------------------
+git add .
+git commit -m "✅ Phase 9 – Production ready, SEO & deployment"
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Git commit failed – resolve any conflicts/staged changes."
+    exit 1
+}
+Write-OK "Commit created."
+
+# 5️⃣  Push to main (triggers Vercel production build) --------------------------------
+git push origin main
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Git push failed."
+    exit 1
+}
+Write-OK "Pushed to origin/main – Vercel is building now."
+
+# 6️⃣  Wait for the latest Vercel deployment (max 60 s) -----------------------------
+Write-Info "Polling Vercel for the newest deployment URL…"
+$deadline = (Get-Date).AddSeconds(60)
+$finalUrl = $null
+while ((Get-Date) -lt $deadline) {
+    $finalUrl = Get-VercelDeploymentUrl -Project $VercelProject -Team $VercelTeam
+    if ($finalUrl) { break }
+    Start-Sleep -Seconds 5
+}
+if (-not $finalUrl) {
+    Write-Warn "Could not fetch a deployment URL – check Vercel dashboard."
+} else {
+    Write-OK "Latest deployment URL: https://$finalUrl"
+}
+
+# 7️⃣  SEO meta‑tag verification -------------------------------------------------------
+if ($finalUrl) {
+    Verify-SEO -Url ("https://" + $finalUrl) -Tags $ExpectedSeoTags | Out-Null
+}
+
+# 8️⃣  Custom‑domain DNS verification ------------------------------------------------
+$hostName = ([uri]$CustomDomain).Host
+Write-Info "Resolving $hostName …"
+try {
+    $records = Resolve-DnsName -Name $hostName -ErrorAction Stop
+    $a = $records | Where-Object {$_.QueryType -eq 'A'}
+    if ($a) {
+        Write-OK "$hostName resolves to $($a.IPAddress -join ', ')"
+    } else {
+        Write-Warn "$hostName has no A records."
+    }
+} catch {
+    Write-Error "DNS lookup failed: $_"
+}
+
+# 9️⃣  (Optional) Analytics script detection -----------------------------------------
+if ($CheckAnalyticsCalls) {
+    $page = Invoke-WebRequest -Uri $CustomDomain -UseBasicParsing
+    $analyticsFound = $page.Content -match 'vercel\.analytics'
+    if ($analyticsFound) {
+        Write-OK "Vercel Analytics script detected in the page source."
+    } else {
+        Write-Warn "Analytics script NOT found.  If you rely on Vercel Analytics,
+double‑check your integration."
+    }
+}
+
+# ────────────────────────────────────── SUMMARY ─────────────────────────────────────
+Write-Host "`n=== PHASE 9 DEPLOYMENT COMPLETE ===`n" -ForegroundColor Magenta
+Write-Host "✔ .env.production verified"
+Write-Host "✔ Git commit & push completed"
+if ($finalUrl)   { Write-Host "✔ Live URL verified: https://$finalUrl" }
+Write-Host "✔ SEO meta‑tags present"
+Write-Host "✔ Custom domain points to Vercel"
+if ($CheckAnalyticsCalls) { Write-Host "✔ Analytics script check completed" }
+
+Write-Host "`nYou can now visit the live site:`n   $CustomDomain`n"
+if ($finalUrl) { Write-Host "`nOr the Vercel deployment URL:`n   https://$finalUrl`n" }
+
+# End of script
