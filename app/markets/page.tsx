@@ -6,16 +6,25 @@ import { useThemeStore } from '@/lib/themeStore';
 import Header from '@/components/Header';
 import GlassCard from '@/components/GlassCard';
 import { TrendingUp, TrendingDown, Search, Crown } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import Image from 'next/image';
+
+// Constants for crypto icon dimensions (matches Tailwind w-8 h-8)
+const CRYPTO_ICON_SIZE = 32;
 
 export default function MarketsPage() {
   const { theme } = useThemeStore();
   const [search, setSearch] = useState('');
 
-  const filteredCryptos = mockCryptoData.filter(crypto =>
-    crypto.name.toLowerCase().includes(search.toLowerCase()) ||
-    crypto.symbol.toLowerCase().includes(search.toLowerCase())
-  );
+  // Memoize filtered results to avoid recalculating on every render
+  const filteredCryptos = useMemo(() => {
+    if (!search) return mockCryptoData;
+    const searchLower = search.toLowerCase();
+    return mockCryptoData.filter(crypto =>
+      crypto.name.toLowerCase().includes(searchLower) ||
+      crypto.symbol.toLowerCase().includes(searchLower)
+    );
+  }, [search]);
 
   return (
     <div className="min-h-screen">
@@ -74,10 +83,12 @@ export default function MarketsPage() {
                     {crypto.market_cap_rank}
                   </div>
                   <div className="col-span-4 flex items-center gap-3">
-                    <img
+                    <Image
                       src={crypto.image}
                       alt={crypto.name}
-                      className="w8 h-8 rounded-full"
+                      width={CRYPTO_ICON_SIZE}
+                      height={CRYPTO_ICON_SIZE}
+                      className="w-8 h-8 rounded-full"
                     />
                     <div>
                       <p className="text-white font-semibold group-hover:text-gradient transition-all">

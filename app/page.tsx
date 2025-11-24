@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useThemeStore } from '@/lib/themeStore';
 import { useCryptoData } from '@/lib/hooks/useCryptoData';
 import { formatMarketCap } from '@/lib/api/cryptoAPI';
@@ -14,8 +15,10 @@ export default function Home() {
   const { theme } = useThemeStore();
   const { coins, gainers, losers, loading, error, refetch, lastUpdated } = useCryptoData(30);
 
-  // Calculate total market cap from our coins
-  const totalMarketCap = coins.reduce((sum, coin) => sum + coin.market_cap, 0);
+  // Memoize expensive calculations
+  const totalMarketCap = React.useMemo(() => {
+    return coins.reduce((sum, coin) => sum + coin.market_cap, 0);
+  }, [coins]);
 
   return (
     <div className="min-h-screen">

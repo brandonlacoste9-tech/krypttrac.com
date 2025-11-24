@@ -1,5 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+// Check if Clerk is configured
+const isClerkConfigured = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 
 // Define protected routes that require authentication
 const isProtectedRoute = createRouteMatcher([
@@ -48,6 +52,37 @@ export default clerkMiddleware(async (auth, req) => {
     })
   }
 })
+// Bypass Clerk entirely if not configured
+function simpleMiddleware(req: NextRequest) {
+  return NextResponse.next()
+}
+
+// Use Clerk middleware only if configured
+const middleware = isClerkConfigured
+  ? clerkMiddleware(async (auth, req) => {
+      // Get auth state
+      const { userId } = await auth()
+      const { pathname } = req.nextUrl
+
+      // Redirect authenticated users away from auth pages to dashboard
+      if (userId && isAuthPage(req)) {
+        const portfolioUrl = new URL('/portfolio', req.url)
+        return NextResponse.redirect(portfolioUrl)
+      }
+
+      // Protect routes requiring authentication
+      if (!userId && isProtectedRoute(req)) {
+        const signInUrl = new URL('/sign-in', req.url)
+        signInUrl.searchParams.set('redirect_url', pathname)
+        return NextResponse.redirect(signInUrl)
+      }
+
+      // Allow all other requests to proceed
+      return NextResponse.next()
+    })
+  : simpleMiddleware
+
+export default middleware
 
 export const config = {
   matcher: [

@@ -255,26 +255,54 @@ export function calculatePortfolioValue(
   }, 0);
 }
 
-// Subscribe to price updates
+// Subscribe to price updates with improved visibility handling
 let updateInterval: NodeJS.Timeout | null = null;
 let subscribers: ((coins: Coin[]) => void)[] = [];
+let lastFetchTime = 0;
+let visibilityCleanup: (() => void) | null = null;
 
 export function subscribeToPriceUpdates(callback: (coins: Coin[]) => void): () => void {
   subscribers.push(callback);
 
+  const fetchAndNotify = async () => {
+    const now = Date.now();
+    // Prevent multiple fetches within cache duration
+    if (now - lastFetchTime < CACHE_DURATION) {
+      return;
+    }
+
+    try {
+      lastFetchTime = now;
+      const coins = await fetchTopCoins();
+      subscribers.forEach(cb => cb(coins));
+    } catch (error) {
+      console.error('Price update failed:', error);
+    }
+  };
+
   // Start polling if not already running
   if (!updateInterval) {
-    updateInterval = setInterval(async () => {
+    updateInterval = setInterval(() => {
       // Only fetch if tab is active
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
-        try {
-          const coins = await fetchTopCoins();
-          subscribers.forEach(cb => cb(coins));
-        } catch (error) {
-          console.error('Price update failed:', error);
-        }
+        fetchAndNotify();
       }
     }, CACHE_DURATION);
+
+    // Listen for visibility changes to fetch immediately when tab becomes visible
+    if (typeof document !== 'undefined') {
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'visible' && subscribers.length > 0) {
+          fetchAndNotify();
+        }
+      };
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      
+      // Store cleanup function in separate variable for type safety
+      visibilityCleanup = () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
+    }
   }
 
   // Return unsubscribe function
@@ -282,7 +310,13 @@ export function subscribeToPriceUpdates(callback: (coins: Coin[]) => void): () =
     subscribers = subscribers.filter(cb => cb !== callback);
     if (subscribers.length === 0 && updateInterval) {
       clearInterval(updateInterval);
+      // Clean up visibility listener
+      if (visibilityCleanup) {
+        visibilityCleanup();
+        visibilityCleanup = null;
+      }
       updateInterval = null;
+      lastFetchTime = 0;
     }
   };
 }
