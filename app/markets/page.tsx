@@ -9,6 +9,9 @@ import { TrendingUp, TrendingDown, Search, Crown } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import Image from 'next/image';
 
+// Constants for crypto icon dimensions (matches Tailwind w-8 h-8)
+const CRYPTO_ICON_SIZE = 32;
+
 export default function MarketsPage() {
   const { theme } = useThemeStore();
   const [search, setSearch] = useState('');
@@ -83,8 +86,8 @@ export default function MarketsPage() {
                     <Image
                       src={crypto.image}
                       alt={crypto.name}
-                      width={32}
-                      height={32}
+                      width={CRYPTO_ICON_SIZE}
+                      height={CRYPTO_ICON_SIZE}
                       className="w-8 h-8 rounded-full"
                     />
                     <div>

@@ -259,6 +259,7 @@ export function calculatePortfolioValue(
 let updateInterval: NodeJS.Timeout | null = null;
 let subscribers: ((coins: Coin[]) => void)[] = [];
 let lastFetchTime = 0;
+let visibilityCleanup: (() => void) | null = null;
 
 export function subscribeToPriceUpdates(callback: (coins: Coin[]) => void): () => void {
   subscribers.push(callback);
@@ -297,8 +298,8 @@ export function subscribeToPriceUpdates(callback: (coins: Coin[]) => void): () =
       };
       document.addEventListener('visibilitychange', handleVisibilityChange);
       
-      // Store the cleanup function
-      (updateInterval as any)._visibilityCleanup = () => {
+      // Store cleanup function in separate variable for type safety
+      visibilityCleanup = () => {
         document.removeEventListener('visibilitychange', handleVisibilityChange);
       };
     }
@@ -310,8 +311,9 @@ export function subscribeToPriceUpdates(callback: (coins: Coin[]) => void): () =
     if (subscribers.length === 0 && updateInterval) {
       clearInterval(updateInterval);
       // Clean up visibility listener
-      if ((updateInterval as any)._visibilityCleanup) {
-        (updateInterval as any)._visibilityCleanup();
+      if (visibilityCleanup) {
+        visibilityCleanup();
+        visibilityCleanup = null;
       }
       updateInterval = null;
       lastFetchTime = 0;
