@@ -1,19 +1,18 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-// Define protected routes
+// Define protected routes that require authentication
 const isProtectedRoute = createRouteMatcher([
   '/portfolio(.*)',
   '/watchlist(.*)',
   '/alerts(.*)',
-  '/api/protected(.*)', // Protect sensitive API routes
+  '/api/protected(.*)',
 ])
 
-// Define public auth routes (login, signup)
-const isPublicRoute = createRouteMatcher([
+// Define auth pages (sign-in, sign-up)
+const isAuthPage = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
-  '/api/public(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req) => {
@@ -21,10 +20,10 @@ export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth()
   const { pathname } = req.nextUrl
 
-  // Redirect authenticated users away from auth pages
-  if (userId && isPublicRoute(req)) {
-    const dashboardUrl = new URL('/portfolio', req.url)
-    return NextResponse.redirect(dashboardUrl)
+  // Redirect authenticated users away from auth pages to dashboard
+  if (userId && isAuthPage(req)) {
+    const portfolioUrl = new URL('/portfolio', req.url)
+    return NextResponse.redirect(portfolioUrl)
   }
 
   // Protect routes requiring authentication
@@ -34,7 +33,7 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(signInUrl)
   }
 
-  // Allow request to proceed
+  // Allow all other requests to proceed
   return NextResponse.next()
 })
 
