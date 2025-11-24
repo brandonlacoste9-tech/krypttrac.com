@@ -1,18 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { TrendingUp, Zap, LayoutDashboard } from 'lucide-react';
 import { SignUpButton, SignedIn } from '@clerk/nextjs';
 import { useThemeStore } from '@/lib/themeStore';
 
-export default function Hero() {
+const Hero = memo(function Hero() {
   const { theme } = useThemeStore();
 
-  const scrollToDemo = () => {
+  const scrollToDemo = useCallback(() => {
     document.getElementById('demo-portfolio')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   return (
     <section className="text-center mb-16 relative">
@@ -100,4 +100,6 @@ export default function Hero() {
       </div>
     </section>
   );
-}
+});
+
+export default Hero;
