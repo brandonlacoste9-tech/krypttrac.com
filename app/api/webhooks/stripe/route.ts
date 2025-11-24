@@ -8,7 +8,7 @@ let stripeInstance: Stripe | null = null;
 
 function getStripe(): Stripe {
   if (!stripeInstance) {
-    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    stripeInstance = new Stripe(process.env.krypttrac_STRIPE_SECRET_KEY!, {
       apiVersion: '2025-11-17.clover',
     });
   }
