@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface GlassCardProps {
   children: React.ReactNode;
@@ -6,7 +6,7 @@ interface GlassCardProps {
   hover?: boolean;
 }
 
-export default function GlassCard({ children, className = '', hover = false }: GlassCardProps) {
+const GlassCard = memo(function GlassCard({ children, className = '', hover = false }: GlassCardProps) {
   return (
     <div
       className={`glass rounded-xl p-6 ${
@@ -16,4 +16,6 @@ export default function GlassCard({ children, className = '', hover = false }: G
       {children}
     </div>
   );
-}
+});
+
+export default GlassCard;

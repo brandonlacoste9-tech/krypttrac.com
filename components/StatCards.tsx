@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import { TrendingUp, Zap, Shield } from 'lucide-react';
 import GlassCard from './GlassCard';
 import { useThemeStore } from '@/lib/themeStore';
@@ -11,7 +11,7 @@ interface StatCardsProps {
   premiumFeature?: string;
 }
 
-export default function StatCards({ 
+const StatCards = memo(function StatCards({ 
   portfolioValue = '$128,430',
   realTimeCoins = 23,
   premiumFeature = 'Active'
@@ -87,4 +87,6 @@ export default function StatCards({
       </GlassCard>
     </section>
   );
-}
+});
+
+export default StatCards;
