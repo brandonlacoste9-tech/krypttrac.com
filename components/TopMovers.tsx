@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 import { Coin, formatPrice } from '@/lib/api/cryptoAPI';
 import { formatPercentWithWL } from '@/lib/lingo/kingsLingo';
@@ -13,17 +13,12 @@ interface TopMoversProps {
   type: 'gainers' | 'losers';
 }
 
-export default function TopMovers({ cryptos, type }: TopMoversProps) {
+const TopMovers = memo(function TopMovers({ cryptos, type }: TopMoversProps) {
   const { theme } = useThemeStore();
   
-  const sorted = [...cryptos].sort((a, b) => {
-    if (type === 'gainers') {
-      return b.price_change_percentage_24h - a.price_change_percentage_24h;
-    }
-    return a.price_change_percentage_24h - b.price_change_percentage_24h;
-  });
-
-  const top5 = sorted.slice(0, 5);
+  // Assume data is already sorted - just take top 5
+  // Parent should pass pre-sorted data to avoid redundant sorting
+  const top5 = cryptos.slice(0, 5);
   const isGainers = type === 'gainers';
 
   return (
@@ -85,4 +80,6 @@ export default function TopMovers({ cryptos, type }: TopMoversProps) {
       </div>
     </GlassCard>
   );
-}
+});
+
+export default TopMovers;

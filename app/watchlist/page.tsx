@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { CryptoData } from '@/types/crypto';
 import { fetchTopCryptos } from '@/lib/api';
 import Header from '@/components/Header';
@@ -13,32 +13,69 @@ export default function WatchlistPage() {
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
+  // Load watchlist from localStorage on mount
   useEffect(() => {
-    loadData();
-    const interval = setInterval(loadData, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadData = async () => {
     const saved = localStorage.getItem('watchlist');
     if (saved) {
-      const watchlistIds = JSON.parse(saved);
-      setWatchlist(new Set(watchlistIds));
-      
-      const data = await fetchTopCryptos(100);
-      const watchlistCryptos = data.filter(crypto => watchlistIds.includes(crypto.id));
-      setCryptos(watchlistCryptos);
+      try {
+        const watchlistIds = JSON.parse(saved);
+        setWatchlist(new Set(watchlistIds));
+      } catch (e) {
+        console.error('Failed to parse watchlist:', e);
+      }
     }
-    setLoading(false);
-  };
+  }, []);
 
-  const toggleWatchlist = (id: string) => {
-    const newWatchlist = new Set(watchlist);
-    newWatchlist.delete(id);
-    setWatchlist(newWatchlist);
-    localStorage.setItem('watchlist', JSON.stringify([...newWatchlist]));
-    setCryptos(cryptos.filter(crypto => crypto.id !== id));
-  };
+  const loadData = useCallback(async () => {
+    if (watchlist.size === 0) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Only fetch if we have items in watchlist
+      // Limit to 50 coins instead of 100 for better performance
+      const data = await fetchTopCryptos(50);
+      const watchlistCryptos = data.filter(crypto => watchlist.has(crypto.id));
+      setCryptos(watchlistCryptos);
+    } catch (error) {
+      console.error('Failed to load watchlist data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [watchlist]);
+
+  useEffect(() => {
+    loadData();
+    
+    // Only poll if we have items and tab is visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible' && watchlist.size > 0) {
+        loadData();
+      }
+    }, 60000);
+    
+    return () => clearInterval(interval);
+  }, [loadData, watchlist.size]);
+
+  const toggleWatchlist = useCallback((id: string) => {
+    setWatchlist(prev => {
+      const newWatchlist = new Set(prev);
+      newWatchlist.delete(id);
+      // Use requestIdleCallback for non-critical localStorage write
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          localStorage.setItem('watchlist', JSON.stringify([...newWatchlist]));
+        });
+      } else {
+        setTimeout(() => {
+          localStorage.setItem('watchlist', JSON.stringify([...newWatchlist]));
+        }, 0);
+      }
+      return newWatchlist;
+    });
+    setCryptos(prev => prev.filter(crypto => crypto.id !== id));
+  }, []);
 
   return (
     <div className="min-h-screen bg-deep-space">
