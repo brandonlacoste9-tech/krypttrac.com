@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   },
 }
 
+// Force dynamic rendering to avoid build-time errors when env vars are missing
+export const dynamic = 'force-dynamic'
+
 export default function RootLayout({
   children,
 }: {
