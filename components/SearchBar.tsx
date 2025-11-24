@@ -1,20 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
   placeholder?: string;
+  debounceMs?: number;
 }
 
-export default function SearchBar({ onSearch, placeholder = 'Search cryptocurrencies...' }: SearchBarProps) {
+export default function SearchBar({ onSearch, placeholder = 'Search cryptocurrencies...', debounceMs = 300 }: SearchBarProps) {
   const [query, setQuery] = useState('');
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    // Clear previous timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Set new timeout for debounced search
+    timeoutRef.current = setTimeout(() => {
+      onSearch(query);
+    }, debounceMs);
+
+    // Cleanup on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [query, debounceMs, onSearch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-    onSearch(value);
   };
 
   return (

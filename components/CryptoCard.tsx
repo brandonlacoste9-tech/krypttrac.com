@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 import { CryptoData } from '@/types/crypto';
 import { formatPrice, formatMarketCap, formatPercentage } from '@/lib/utils';
@@ -13,7 +13,7 @@ interface CryptoCardProps {
   onToggleWatchlist?: (id: string) => void;
 }
 
-export default function CryptoCard({ crypto, isWatchlisted = false, onToggleWatchlist }: CryptoCardProps) {
+const CryptoCard = memo(function CryptoCard({ crypto, isWatchlisted = false, onToggleWatchlist }: CryptoCardProps) {
   const isPositive = crypto.price_change_percentage_24h >= 0;
 
   return (
@@ -76,4 +76,6 @@ export default function CryptoCard({ crypto, isWatchlisted = false, onToggleWatc
       </div>
     </GlassCard>
   );
-}
+});
+
+export default CryptoCard;
