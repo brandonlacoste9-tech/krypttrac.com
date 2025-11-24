@@ -37,3 +37,4 @@
   "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
   "remoteUser": "node"
 }
+"ghcr.io/dotnet/aspire-devcontainer-feature/dotnetaspire:1": {}
