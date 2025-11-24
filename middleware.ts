@@ -16,25 +16,37 @@ const isAuthPage = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  // Get auth state
-  const { userId } = await auth()
-  const { pathname } = req.nextUrl
+  try {
+    // Get auth state
+    const { userId } = await auth()
+    const { pathname } = req.nextUrl
 
-  // Redirect authenticated users away from auth pages to dashboard
-  if (userId && isAuthPage(req)) {
-    const portfolioUrl = new URL('/portfolio', req.url)
-    return NextResponse.redirect(portfolioUrl)
+    // Redirect authenticated users away from auth pages to dashboard
+    if (userId && isAuthPage(req)) {
+      const portfolioUrl = new URL('/portfolio', req.url)
+      return NextResponse.redirect(portfolioUrl)
+    }
+
+    // Protect routes requiring authentication
+    if (!userId && isProtectedRoute(req)) {
+      const signInUrl = new URL('/sign-in', req.url)
+      signInUrl.searchParams.set('redirect_url', pathname)
+      return NextResponse.redirect(signInUrl)
+    }
+
+    // Allow all other requests to proceed
+    return NextResponse.next()
+  } catch (error) {
+    // Log the error for diagnostics in Vercel logs or cloud platform output
+    // This provides visibility into runtime issues that would otherwise result in blank white pages
+    console.error('Middleware error:', error)
+    
+    // Return a 500 error response with descriptive text for easier debugging
+    // This ensures errors are visible rather than resulting in a blank page
+    return new NextResponse('Internal Server Error - Middleware encountered an error', {
+      status: 500,
+    })
   }
-
-  // Protect routes requiring authentication
-  if (!userId && isProtectedRoute(req)) {
-    const signInUrl = new URL('/sign-in', req.url)
-    signInUrl.searchParams.set('redirect_url', pathname)
-    return NextResponse.redirect(signInUrl)
-  }
-
-  // Allow all other requests to proceed
-  return NextResponse.next()
 })
 
 export const config = {
