@@ -3,11 +3,21 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { clerkClient } from '@clerk/nextjs/server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-});
+// Lazy initialization to avoid build-time errors
+let stripeInstance: Stripe | null = null;
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-11-17.clover',
+    });
+  }
+  return stripeInstance;
+}
+
+function getWebhookSecret(): string {
+  return process.env.STRIPE_WEBHOOK_SECRET!;
+}
 
 // Map Stripe price IDs to tier names
 const PRICE_TO_TIER: Record<string, 'silver' | 'gold' | 'platinum'> = {
@@ -42,7 +52,7 @@ async function updateUserTier(
     if (!user) {
       console.log(`No user found with Stripe customer ID: ${customerId}`);
       // Try to find by email from Stripe
-      const customer = await stripe.customers.retrieve(customerId);
+      const customer = await getStripe().customers.retrieve(customerId);
       if (customer.deleted) return;
 
       const email = customer.email;
@@ -96,7 +106,7 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, signature, getWebhookSecret());
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
     return NextResponse.json(
@@ -113,7 +123,7 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
 
         if (session.mode === 'subscription' && session.subscription) {
-          const subscription = await stripe.subscriptions.retrieve(
+          const subscription = await getStripe().subscriptions.retrieve(
             session.subscription as string
           );
 
@@ -150,10 +160,11 @@ export async function POST(req: Request) {
 
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = invoice.parent?.subscription_details?.subscription;
 
-        if (invoice.subscription && invoice.customer) {
-          const subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string
+        if (subscriptionId && invoice.customer) {
+          const subscription = await getStripe().subscriptions.retrieve(
+            subscriptionId as string
           );
 
           const priceId = subscription.items.data[0]?.price.id;
@@ -187,9 +198,3 @@ export async function POST(req: Request) {
   }
 }
 
-// Disable body parsing for webhook signature verification
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

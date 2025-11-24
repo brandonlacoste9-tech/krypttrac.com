@@ -72,7 +72,7 @@ export default function UserProfileDropdown() {
       >
         <div
           className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-offset-2 ring-offset-black transition-all duration-300"
-          style={{ ringColor: theme.primary }}
+          style={{ ['--tw-ring-color' as string]: theme.primary } as React.CSSProperties}
         >
           {user.imageUrl ? (
             <Image
@@ -116,7 +116,7 @@ export default function UserProfileDropdown() {
             <div className="flex items-center gap-3">
               <div
                 className="relative w-12 h-12 rounded-full overflow-hidden ring-2"
-                style={{ ringColor: theme.primary }}
+                style={{ ['--tw-ring-color' as string]: theme.primary } as React.CSSProperties}
               >
                 {user.imageUrl ? (
                   <Image

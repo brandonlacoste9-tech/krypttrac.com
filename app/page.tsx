@@ -61,7 +61,7 @@ export default function Home() {
           <div className="mb-12">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-4xl font-bold text-white">
-                <span className="text-gradient">What's Poppin'</span>
+                <span className="text-gradient">What&apos;s Poppin&apos;</span>
               </h2>
               {lastUpdated && (
                 <div className="flex items-center gap-2 text-sm text-gray-400">

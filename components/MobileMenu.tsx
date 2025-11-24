@@ -158,8 +158,8 @@ export default function MobileMenu({ isOpen, onClose, userTier = 'free' }: Mobil
                   }`}
                   style={{
                     background: `linear-gradient(135deg, ${t.primary}, ${t.accent})`,
-                    ringColor: t.primary,
-                  }}
+                    ['--tw-ring-color' as string]: t.primary,
+                  } as React.CSSProperties}
                   title={t.name}
                 />
               ))}
@@ -191,8 +191,8 @@ export default function MobileMenu({ isOpen, onClose, userTier = 'free' }: Mobil
                     }`}
                     style={{
                       background: `linear-gradient(135deg, ${t.primary}, ${t.accent})`,
-                      ringColor: t.primary,
-                    }}
+                      ['--tw-ring-color' as string]: t.primary,
+                    } as React.CSSProperties}
                     title={isLocked ? `${t.name} (${getTierDisplayName(t.tierRequired!)} Only)` : t.name}
                   >
                     {isLocked && (
