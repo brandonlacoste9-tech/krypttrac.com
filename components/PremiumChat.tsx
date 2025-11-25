@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, Crown, Lock, Sparkles, Diamond } from 'lucide-react'
+import { Send, Crown, Lock, Sparkles } from 'lucide-react'
+import { TierBadge } from './TierBadge'
 
 interface Message {
   id: string
@@ -22,7 +23,7 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
     {
       id: '1',
       userId: 'system',
-      username: 'Krypttrac Bot',
+      username: 'Krypto Kings Bot',
       tier: 'platinum',
       content: 'Welcome to the Kings Lounge 👑 Gold and Platinum members only!',
       timestamp: new Date(),
@@ -51,27 +52,6 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
 
     setMessages(prev => [...prev, newMessage])
     setInput('')
-  }
-
-  const getTierBadge = (tier: string) => {
-    switch(tier) {
-      case 'platinum':
-        return (
-          <span className="flex items-center gap-1 text-xs bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 rounded-full font-semibold">
-            <Diamond className="w-3 h-3" />
-            PLATINUM
-          </span>
-        )
-      case 'gold':
-        return (
-          <span className="flex items-center gap-1 text-xs bg-gradient-to-r from-yellow-600 to-yellow-500 px-2 py-0.5 rounded-full font-semibold">
-            <Crown className="w-3 h-3" />
-            GOLD
-          </span>
-        )
-      default:
-        return null
-    }
   }
 
   if (!canAccess) {
@@ -138,7 +118,7 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
               <p className="text-xs text-gray-400">Gold & Platinum Members Only</p>
             </div>
           </div>
-          {getTierBadge(userTier)}
+          <TierBadge tier={userTier} size="sm" />
         </div>
       </div>
 
@@ -156,7 +136,7 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-semibold text-white text-sm">{msg.username}</span>
-                {getTierBadge(msg.tier)}
+                <TierBadge tier={msg.tier} size="sm" />
                 <span className="text-xs text-gray-500">
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
