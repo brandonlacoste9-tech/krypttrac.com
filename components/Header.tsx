@@ -1,5 +1,8 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
 export function Header() {
   return (
@@ -27,7 +30,7 @@ export function Header() {
         </Link>
 
         {/* Navigation */}
-        <nav className="flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6">
           <Link
             href="/dashboard"
             className="text-gray-300 hover:text-white transition"
@@ -54,10 +57,25 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* CTA */}
-        <button className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl text-white font-semibold transition-all hover:scale-105">
-          Connect Wallet
-        </button>
+        {/* Auth Buttons */}
+        <div className="flex items-center gap-4">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl text-white font-semibold transition-all hover:scale-105">
+                Sign In
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10 border-2 border-purple-500",
+                },
+              }}
+            />
+          </SignedIn>
+        </div>
       </div>
     </header>
   )
