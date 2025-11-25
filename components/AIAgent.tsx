@@ -86,7 +86,7 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
             ? 'bg-gradient-to-br from-red-600 to-orange-600 animate-pulse'
             : 'bg-gradient-to-br from-purple-600 via-pink-600 to-purple-700'
         } text-white rounded-full p-4 shadow-2xl hover:scale-110 transition-all`}
-        title={hasDepegs ? 'Stablecoin Alert!' : 'Ask Krypttrac AI'}
+        title={hasDepegs ? 'Stablecoin Alert!' : 'Ask Krypto Kings AI'}
       >
         {hasDepegs ? <TrendingUp className="w-7 h-7" /> : <Sparkles className="w-7 h-7" />}
       </button>
@@ -103,7 +103,7 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
               {hasDepegs ? <TrendingUp className="w-6 h-6 text-white" /> : <Sparkles className="w-6 h-6 text-white" />}
             </div>
             <div>
-              <h3 className="font-bold text-white text-lg">Krypttrac AI</h3>
+              <h3 className="font-bold text-white text-lg">Krypto Kings AI</h3>
               <p className="text-xs text-gray-400">
                 {hasDepegs ? '⚠️ Stablecoin Alert' : 'Built for Kings 👑'}
               </p>

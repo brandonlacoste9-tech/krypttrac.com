@@ -10,7 +10,7 @@ export default function Home() {
             <div className="w-full h-full bg-slate-900 rounded-3xl flex items-center justify-center">
               <Image
                 src="/kk-logo.png"
-                alt="Krypttrac"
+                alt="Krypto Kings"
                 width={100}
                 height={100}
                 className="drop-shadow-2xl"
@@ -22,7 +22,7 @@ export default function Home() {
         {/* Title */}
         <div>
           <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-            Krypttrac
+            Krypto Kings
           </h1>
           <p className="text-2xl text-gray-400 mt-4">Built for Kings 👑</p>
         </div>

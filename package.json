@@ -1,7 +1,12 @@
 {
-  "name": "krypttrac",
+  "name": "krypto-kings",
   "version": "0.1.0",
-  "description": "Track your bag like a king - Built for Kings 👑",
+  "description": "Krypto Kings - Built for Kings 👑",
+  "homepage": "https://kryptokings.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brandonlacoste9-tech/krypttrac.git"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",

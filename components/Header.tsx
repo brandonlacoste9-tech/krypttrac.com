@@ -11,7 +11,7 @@ export function Header() {
             <div className="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center">
               <Image
                 src="/kk-logo.png"
-                alt="Krypttrac Logo"
+                alt="Krypto Kings Logo"
                 width={40}
                 height={40}
                 className="object-contain"
@@ -20,7 +20,7 @@ export function Header() {
           </div>
           <div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-              Krypttrac
+              Krypto Kings
             </h1>
             <p className="text-xs text-gray-400">Built for Kings 👑</p>
           </div>

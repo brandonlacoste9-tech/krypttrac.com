@@ -2,11 +2,18 @@ import './globals.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Krypttrac - Built for Kings 👑',
-  description: 'Track your bag like a king. Real-time data, luxury themes, and that royal energy.',
+  title: 'Krypto Kings - Built for Kings 👑',
+  description: 'Track your crypto portfolio like royalty. Real-time data, luxury themes, and premium features for crypto kings.',
   icons: {
     icon: '/kk-logo.png',
     apple: '/kk-logo.png',
+  },
+  openGraph: {
+    title: 'Krypto Kings - Built for Kings 👑',
+    description: 'Track your crypto portfolio like royalty',
+    url: 'https://kryptokings.app',
+    siteName: 'Krypto Kings',
+    type: 'website',
   },
 }
 

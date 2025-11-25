@@ -36,7 +36,7 @@ ${stablecoins.map((c: any) =>
 ${portfolioData ? JSON.stringify(portfolioData) : 'No portfolio connected'}
 `
 
-    const systemPrompt = `You are the Krypttrac AI - crypto advisor for KINGS 👑
+    const systemPrompt = `You are the Krypto Kings AI - crypto advisor for KINGS 👑
 
 ${marketContext}
 
