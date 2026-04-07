@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Sparkles, Send, X, TrendingUp } from 'lucide-react'
+import { parseUsdString } from '@/lib/dashboard-context'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -21,10 +22,10 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Check for stablecoin de-pegs
-  const hasDepegs = dashboardData?.stablecoins?.some((coin: any) =>
-    parseFloat(coin.price.replace(/,/g, '')) < 0.99
-  )
+  const hasDepegs = dashboardData?.stablecoins?.some((coin: { price: string }) => {
+    const n = parseUsdString(coin.price)
+    return Number.isFinite(n) && n > 0 && n < 0.99
+  })
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -188,7 +189,7 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && !loading && sendMessage()}
+            onKeyDown={(e) => e.key === 'Enter' && !loading && sendMessage()}
             placeholder="Ask about crypto..."
             disabled={loading}
             className="flex-1 bg-slate-800/60 border border-purple-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"

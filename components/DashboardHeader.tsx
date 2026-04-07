@@ -1,8 +1,9 @@
 'use client'
 
 import { Bell, User } from 'lucide-react'
-import { useUser } from '@clerk/nextjs'
+import { useUser, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export function DashboardHeader() {
   const { user } = useUser()
@@ -49,18 +50,27 @@ export function DashboardHeader() {
         )}
       </div>
 
-      {/* Right - Notification Bell */}
-      <button 
-        className="relative w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-        style={{
-          background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.4), rgba(26, 11, 46, 0.6))',
-          border: '2px solid rgba(255, 215, 108, 0.3)',
-        }}
-      >
-        <Bell className="w-6 h-6 text-yellow-400" />
-        {/* Notification dot */}
-        <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-purple-950" />
-      </button>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/markets"
+          className="hidden sm:inline text-xs font-semibold text-yellow-400/90 hover:text-yellow-300 transition mr-1"
+        >
+          Markets
+        </Link>
+        <button
+          type="button"
+          title="Alerts coming soon"
+          className="relative w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{
+            background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.4), rgba(26, 11, 46, 0.6))',
+            border: '2px solid rgba(255, 215, 108, 0.3)',
+          }}
+        >
+          <Bell className="w-6 h-6 text-yellow-400" />
+          <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-purple-950" />
+        </button>
+        <UserButton afterSignOutUrl="/" />
+      </div>
     </header>
   )
 }

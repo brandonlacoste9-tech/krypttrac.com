@@ -3,6 +3,9 @@ import type { Metadata } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from '@/components/ThemeProvider'
 
+/** Avoid static prerender without Clerk keys (CI / fresh clones). */
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Krypto Kings - Rule Your Portfolio',
   description: 'Command your crypto empire with royal precision.',

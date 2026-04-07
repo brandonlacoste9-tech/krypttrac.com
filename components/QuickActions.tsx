@@ -15,8 +15,7 @@ export function QuickActions() {
       <div className="flex items-center justify-around gap-4">
         {actions.map((action, idx) => (
           <div key={idx} className="flex flex-col items-center gap-2">
-            {/* Gold Coin Button */}
-            <button className="gold-coin">
+            <button type="button" className="gold-coin" title="Coming soon">
               <action.icon 
                 className="w-6 h-6"
                 style={{ color: '#1A0B2E' }}
