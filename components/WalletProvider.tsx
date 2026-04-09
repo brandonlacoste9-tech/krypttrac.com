@@ -4,8 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider, createConfig, http } from 'wagmi'
 import { mainnet, base, arbitrum, optimism } from 'wagmi/chains'
 import { injected } from 'wagmi/connectors'
+import { useState, type ReactNode } from 'react'
 
-export const config = createConfig({
+const config = createConfig({
   chains: [mainnet, base, arbitrum, optimism],
   connectors: [
     injected(),
@@ -16,11 +17,12 @@ export const config = createConfig({
     [arbitrum.id]: http(),
     [optimism.id]: http(),
   },
+  ssr: true,
 })
 
-const queryClient = new QueryClient()
+export function WalletProvider({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient())
 
-export function WalletProvider({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
