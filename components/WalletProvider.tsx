@@ -3,13 +3,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider, createConfig, http } from 'wagmi'
 import { mainnet, base, arbitrum, optimism } from 'wagmi/chains'
-import { injected, safe } from 'wagmi/connectors'
+import { injected } from 'wagmi/connectors'
 
 export const config = createConfig({
   chains: [mainnet, base, arbitrum, optimism],
   connectors: [
     injected(),
-    safe(),
   ],
   transports: {
     [mainnet.id]: http(),
