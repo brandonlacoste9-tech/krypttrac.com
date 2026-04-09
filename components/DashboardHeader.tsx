@@ -1,13 +1,13 @@
 'use client'
 
 import { Bell, User } from 'lucide-react'
-import { useUser, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export function DashboardHeader() {
-  const { user } = useUser()
-  const tier = (user?.publicMetadata?.tier as string) || 'free'
+  // Clerk auth temporarily disabled to prevent 500 errors when providers are missing
+  const user = null
+  const tier = 'free'
   
   return (
     <header className="flex items-center justify-between px-6 py-4">
@@ -21,17 +21,7 @@ export function DashboardHeader() {
             border: '2px solid rgba(255, 215, 108, 0.3)',
           }}
         >
-          {user?.imageUrl ? (
-            <Image 
-              src={user.imageUrl} 
-              alt="Profile" 
-              width={40} 
-              height={40} 
-              className="rounded-full"
-            />
-          ) : (
-            <User className="w-6 h-6 text-yellow-400" />
-          )}
+          <User className="w-6 h-6 text-yellow-400" />
         </div>
 
         {/* Platinum Subscriber Badge */}
@@ -69,7 +59,7 @@ export function DashboardHeader() {
           <Bell className="w-6 h-6 text-yellow-400" />
           <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-purple-950" />
         </button>
-        <UserButton afterSignOutUrl="/" />
+        {/* UserButton removed until Clerk is re-enabled */}
       </div>
     </header>
   )
