@@ -26,6 +26,9 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
     min-height: 100vh;
+    background: linear-gradient(135deg, #1A0B2E 0%, #0D0512 50%, #1A0B2E 100%);
+    background-attachment: fixed;
+    color: #F5F5F5;
   }
   
   body.theme-royal {

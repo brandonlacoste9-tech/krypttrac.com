@@ -14,32 +14,18 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('royal')
-  const [canUsePlatinum, setCanUsePlatinum] = useState(false)
-
-  // Try to get user from Clerk if available
-  let user: Record<string, unknown> | null | undefined = null
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const clerk = require('@clerk/nextjs')
-    const result = clerk.useUser()
-    user = result?.user
-  } catch {
-    // Clerk not available — proceed without user
-  }
+  const [canUsePlatinum] = useState(false)
 
   useEffect(() => {
-    const userTier = (user as Record<string, unknown>)?.publicMetadata
-      ? ((user as Record<string, unknown>).publicMetadata as Record<string, string>)?.tier || 'free'
-      : 'free'
-    setCanUsePlatinum(userTier === 'platinum')
-
+    // Load saved theme preference
     const saved = localStorage.getItem('kk-theme') as Theme
-    if (saved && (saved === 'royal' || (saved === 'platinum' && userTier === 'platinum'))) {
+    if (saved && saved === 'royal') {
       setThemeState(saved)
     }
-  }, [user])
+  }, [])
 
   useEffect(() => {
+    // Apply theme to body
     document.body.className = `theme-${theme}`
     localStorage.setItem('kk-theme', theme)
   }, [theme])
@@ -50,9 +36,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       return
     }
     setThemeState(newTheme)
-    if (newTheme === 'platinum' && canUsePlatinum) {
-      console.log('👑 Platinum Suite Activated')
-    }
   }
 
   return (
