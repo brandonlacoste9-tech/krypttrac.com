@@ -51,9 +51,14 @@ export function PortfolioBreakdown() {
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
   const [syncedAddress, setSyncedAddress] = useState('')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (isConnected && address && address !== syncedAddress) {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (mounted && isConnected && address && address !== syncedAddress) {
       linkWalletConnection(address)
         .then((res) => {
           if (res.success) {
@@ -65,9 +70,10 @@ export function PortfolioBreakdown() {
         })
         .catch(console.error)
     }
-  }, [isConnected, address, syncedAddress])
+  }, [isConnected, address, syncedAddress, mounted])
 
-  const realConnections: Connection[] = isConnected ? [{
+  // To prevent hydration mismatch, only show real connections after mount
+  const realConnections: Connection[] = (mounted && isConnected) ? [{
     id: 'web3-injected',
     name: 'Web3 Wallet',
     type: 'wallet',
@@ -101,16 +107,6 @@ export function PortfolioBreakdown() {
               border: '1px solid rgba(255, 215, 108, 0.1)',
               transition: 'all 0.3s ease'
             }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255, 215, 108, 0.4)'
-              e.currentTarget.style.transform = 'translateX(4px)'
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(138, 43, 226, 0.2)'
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255, 215, 108, 0.1)'
-              e.currentTarget.style.transform = 'translateX(0px)'
-              e.currentTarget.style.boxShadow = 'none'
-            }}
           >
             <div className="flex items-center gap-4">
               <div 
@@ -125,7 +121,6 @@ export function PortfolioBreakdown() {
                 ) : (
                   <Building2 className="w-5 h-5 text-yellow-500 relative z-10" />
                 )}
-                {/* Micro-animation glow */}
                 <div className="absolute inset-0 metallic-shine opacity-10" style={{ background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent)' }} />
               </div>
 
@@ -154,16 +149,8 @@ export function PortfolioBreakdown() {
             borderColor: 'rgba(255, 215, 108, 0.3)',
             color: '#F4C430'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 215, 108, 0.05)'
-            e.currentTarget.style.borderColor = 'rgba(255, 215, 108, 0.6)'
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.borderColor = 'rgba(255, 215, 108, 0.3)'
-          }}
         >
-          <Wallet className="w-4 h-4" /> {isConnected ? 'Disconnect Wallet' : 'Connect Web3 Wallet'}
+          <Wallet className="w-4 h-4" /> {mounted && isConnected ? 'Disconnect Wallet' : 'Connect Web3 Wallet'}
         </button>
       </div>
     </div>
