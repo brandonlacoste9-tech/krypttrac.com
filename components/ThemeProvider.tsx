@@ -15,9 +15,10 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('royal')
   const [canUsePlatinum] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Load saved theme preference
+    setMounted(true)
     const saved = localStorage.getItem('kk-theme') as Theme
     if (saved && saved === 'royal') {
       setThemeState(saved)
@@ -25,22 +26,25 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    // Apply theme to body
+    if (!mounted) return
     document.body.className = `theme-${theme}`
     localStorage.setItem('kk-theme', theme)
-  }, [theme])
+  }, [theme, mounted])
 
   const setTheme = (newTheme: Theme) => {
     if (newTheme === 'platinum' && !canUsePlatinum) {
-      alert('🔒 Platinum Suite is exclusive to Platinum Kings! Upgrade your tier to unlock this premium theme.')
+      alert('🔒 Platinum Suite is exclusive to Platinum Kings!')
       return
     }
     setThemeState(newTheme)
   }
 
+  // Prevent hydration mismatch by returning empty div or just children without theme applied until mounted
   return (
     <ThemeContext.Provider value={{ theme, setTheme, canUsePlatinum }}>
-      {children}
+      <div style={{ visibility: mounted ? 'visible' : 'hidden' }}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   )
 }

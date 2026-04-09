@@ -3,33 +3,59 @@ import Link from 'next/link'
 
 export default function SplashScreen() {
   return (
-    <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '20px' }}>
-      <div style={{ marginBottom: '40px' }}>
-        <Image
-          src="/kk-logo.png"
-          alt="Krypto Kings Logo"
-          width={150}
-          height={150}
-          priority
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[#1A0B2E]">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 L20 25 L25 25 L25 35 L35 35 L35 25 L40 25 Z' fill='%23FFD76C' fill-opacity='0.1'/%3E%3C/svg%3E")`,
+            backgroundSize: '120px 120px',
+          }}
         />
       </div>
-      
-      <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0', background: 'linear-gradient(to right, #FFD76C, #C49A2B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-        KRYPTO KINGS
-      </h1>
-      
-      <p style={{ fontSize: '1.5rem', opacity: 0.8, marginBottom: '40px' }}>
-        Rule Your Portfolio.
-      </p>
 
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <Link href="/dashboard" style={{ padding: '15px 30px', background: '#FFD76C', color: '#1A0B2E', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none' }}>
-          Enter the Realm
-        </Link>
-        <Link href="/markets" style={{ padding: '15px 30px', border: '2px solid #FFD76C', color: '#FFD76C', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none' }}>
-          Markets
-        </Link>
+      {/* Main Content */}
+      <div className="relative z-10 text-center space-y-8 max-w-md">
+        {/* Logo Container */}
+        <div className="flex justify-center mb-8">
+          <div className="relative w-48 h-48 rounded-[2.5rem] p-1 bg-gradient-to-br from-[#FFD76C] to-[#C49A2B] shadow-2xl">
+            <div className="w-full h-full rounded-[2.3rem] flex items-center justify-center bg-[#1A0B2E]">
+              <Image
+                src="/kk-logo.png"
+                alt="Krypto Kings Crown"
+                width={120}
+                height={120}
+                priority
+                className="drop-shadow-[0_0_20px_rgba(255,215,108,0.4)]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Title */}
+        <div className="space-y-2">
+          <h1 className="text-5xl md:text-6xl font-black tracking-wider gold-text uppercase">
+            Krypto Kings
+          </h1>
+          <p className="text-xl font-light text-gray-300">
+            Rule Your Portfolio.
+          </p>
+        </div>
+
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link href="/dashboard" className="w-full sm:w-auto">
+            <span className="block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer bg-gradient-to-r from-[#FFD76C] to-[#C49A2B] text-[#1A0B2E] shadow-[0_8px_32px_rgba(255,215,108,0.3)]">
+              Enter the Realm
+            </span>
+          </Link>
+          <Link href="/markets" className="w-full sm:w-auto">
+            <span className="block px-10 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer border-2 border-[#FFD76C]/40 text-[#FFD76C]">
+              Markets
+            </span>
+          </Link>
+        </div>
       </div>
-    </main>
+    </div>
   )
 }

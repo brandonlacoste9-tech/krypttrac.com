@@ -1,11 +1,15 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Krypto Kings - Rule Your Portfolio',
   description: 'Command your crypto empire with royal precision.',
+  icons: {
+    icon: '/kk-logo.png',
+  },
 }
 
 export default function RootLayout({
@@ -15,8 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body style={{ background: '#1A0B2E', color: 'white', margin: 0, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        {children}
+      <body className="theme-royal">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
