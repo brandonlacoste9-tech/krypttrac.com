@@ -6,6 +6,7 @@ import { TreasuryCard } from '@/components/TreasuryCard'
 import { QuickActions } from '@/components/QuickActions'
 import { RoyalAssets, type RoyalAssetRow } from '@/components/RoyalAssets'
 import { BottomNav } from '@/components/BottomNav'
+import { PortfolioBreakdown, MOCK_CONNECTIONS } from '@/components/PortfolioBreakdown'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { AIAgent } from '@/components/AIAgent'
 import type { DashboardSnapshot } from '@/lib/server/market-fetch'
@@ -71,21 +72,6 @@ export function DashboardShell() {
   }, [snapshot])
 
   const g = snapshot?.global
-  const mcap = g?.totalMarketCapUsd ?? null
-  const mcapDelta = g?.marketCapChange24hPct ?? null
-  const isMcapUp = mcapDelta == null ? null : mcapDelta >= 0
-
-  const footnoteParts: string[] = []
-  if (g?.btcDominancePct != null) {
-    footnoteParts.push(`BTC dominance ${g.btcDominancePct.toFixed(1)}%`)
-  }
-  if (g?.ethDominancePct != null) {
-    footnoteParts.push(`ETH ${g.ethDominancePct.toFixed(1)}%`)
-  }
-  if (g?.totalVolumeUsd != null) {
-    footnoteParts.push(`24h vol ${formatUsd(g.totalVolumeUsd, true)}`)
-  }
-  const footnote = footnoteParts.length ? footnoteParts.join(' · ') : undefined
 
   return (
     <div className="min-h-screen pb-24 relative">
@@ -93,13 +79,15 @@ export function DashboardShell() {
       <DashboardHeader />
       <TreasuryCard
         loading={bootLoading}
-        primaryValue={mcap != null ? formatUsd(mcap, true) : '—'}
-        changeLabel="24h market cap"
-        changePercent={formatPct(mcapDelta)}
-        isPositive={isMcapUp}
-        footnote={footnote}
+        headline="Total Net Worth"
+        primaryValue={bootLoading ? '—' : '$124,592.50'}
+        changeLabel="24h Profit"
+        changePercent="+1.4%"
+        isPositive={true}
+        footnote="Includes 3 connected real estate assets & 4 wallets"
       />
       <QuickActions />
+      <PortfolioBreakdown />
       <RoyalAssets
         assets={royalAssets}
         loading={bootLoading}
@@ -107,7 +95,14 @@ export function DashboardShell() {
         onRetry={load}
       />
       <BottomNav />
-      <AIAgent dashboardData={snapshot?.aiContext} />
+      <AIAgent 
+        dashboardData={snapshot?.aiContext} 
+        portfolioData={{
+          totalNetWorth: '$124,592.50',
+          dailyProfit: '+1.4%',
+          connections: MOCK_CONNECTIONS
+        }}
+      />
     </div>
   )
 }

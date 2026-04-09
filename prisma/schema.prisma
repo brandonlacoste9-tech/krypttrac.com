@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Portfolio {
+  id        String   @id @default(cuid())
+  userId    String   // mapped to Clerk auth ID
+  name      String   @default("My Kingdom")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  holdings     Holding[]
+  transactions Transaction[]
+  connections  Connection[]
+
+  @@index([userId])
+}
+
+model Connection {
+  id           String    @id @default(cuid())
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  type         String    // "wallet" | "cex"
+  name         String    // e.g., "MetaMask", "Binance"
+  identifier   String    // wallet address or hashed CEX api key ID
+  createdAt    DateTime  @default(now())
+  
+  holdings     Holding[]
+}
+
+model Holding {
+  id           String      @id @default(cuid())
+  portfolioId  String
+  portfolio    Portfolio   @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  connectionId String?
+  connection   Connection? @relation(fields: [connectionId], references: [id], onDelete: SetNull)
+  assetSymbol  String      // e.g., "BTC", "SOL"
+  amount       Float
+  avgBuyPrice  Float?      
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Transaction {
+  id            String    @id @default(cuid())
+  portfolioId   String
+  portfolio     Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  type          String    // "BUY", "SELL", "TRANSFER"
+  assetSymbol   String
+  amount        Float
+  priceAtTime   Float
+  timestamp     DateTime  @default(now())
+  txHash        String?   // optional block hash for on-chain proof
+}

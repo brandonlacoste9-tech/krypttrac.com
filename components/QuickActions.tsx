@@ -6,8 +6,8 @@ export function QuickActions() {
   const actions = [
     { icon: ArrowUp, label: 'Send', color: '#FFD76C' },
     { icon: ArrowDown, label: 'Receive', color: '#FFD76C' },
-    { icon: Plus, label: 'Buy', color: '#FFD76C' },
     { icon: RefreshCw, label: 'Swap', color: '#FFD76C' },
+    { icon: Plus, label: 'AI Audit', color: '#FFD76C' },
   ]
 
   return (
@@ -15,7 +15,18 @@ export function QuickActions() {
       <div className="flex items-center justify-around gap-4">
         {actions.map((action, idx) => (
           <div key={idx} className="flex flex-col items-center gap-2">
-            <button type="button" className="gold-coin" title="Coming soon">
+            <button 
+              type="button" 
+              className="gold-coin" 
+              title={action.label === 'AI Audit' ? 'Run AI Audit' : 'Coming soon'}
+              onClick={() => {
+                if (action.label === 'AI Audit') {
+                  window.dispatchEvent(new CustomEvent('OPEN_AI_AGENT', { 
+                    detail: { message: 'Can you run a full AI audit on my portfolio right now?' }
+                  }))
+                }
+              }}
+            >
               <action.icon 
                 className="w-6 h-6"
                 style={{ color: '#1A0B2E' }}

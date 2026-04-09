@@ -22,6 +22,8 @@ export const metadata: Metadata = {
   },
 }
 
+import { WalletProvider } from '@/components/WalletProvider'
+
 export default function RootLayout({
   children,
 }: {
@@ -31,9 +33,11 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <WalletProvider>
+            <ThemeProvider>
+              {children}
+            </ThemeProvider>
+          </WalletProvider>
         </body>
       </html>
     </ClerkProvider>

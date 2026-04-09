@@ -58,9 +58,9 @@ export function MarketsView() {
       </header>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-black gold-text mb-2">All markets</h1>
+        <h1 className="text-4xl font-black gold-text mb-2 tracking-wide text-shadow-gold">Royal Markets</h1>
         <p className="text-gray-400 text-sm mb-8">
-          Top cryptocurrencies by market cap. Updates about every minute.
+          Live top cryptocurrencies. The pulse of your empire.
         </p>
 
         {loading ? (
@@ -72,48 +72,52 @@ export function MarketsView() {
         ) : !snap?.markets?.length ? (
           <p className="text-red-300 text-sm">{snap?.error || 'No market data.'}</p>
         ) : (
-          <div className="rounded-2xl border border-white/10 overflow-hidden bg-white/5 backdrop-blur-sm">
+          <div className="rounded-2xl overflow-hidden backdrop-blur-md"
+               style={{
+                 background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.25), rgba(26, 11, 46, 0.4))',
+                 border: '1px solid rgba(255, 215, 108, 0.15)'
+               }}>
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-gray-500 border-b border-white/10">
-                  <th className="py-3 px-3 font-medium w-10">#</th>
-                  <th className="py-3 px-3 font-medium">Name</th>
-                  <th className="py-3 px-3 font-medium text-right">Price</th>
-                  <th className="py-3 px-3 font-medium text-right hidden sm:table-cell">24h</th>
-                  <th className="py-3 px-3 font-medium text-right hidden md:table-cell">Mcap</th>
+                <tr className="text-left text-yellow-500/70 border-b" style={{ borderColor: 'rgba(255, 215, 108, 0.15)' }}>
+                  <th className="py-4 px-4 font-medium w-10">#</th>
+                  <th className="py-4 px-4 font-medium uppercase tracking-wider text-xs">Asset</th>
+                  <th className="py-4 px-4 font-medium text-right uppercase tracking-wider text-xs">Price</th>
+                  <th className="py-4 px-4 font-medium text-right hidden sm:table-cell uppercase tracking-wider text-xs">24h</th>
+                  <th className="py-4 px-4 font-medium text-right hidden md:table-cell uppercase tracking-wider text-xs">Market Cap</th>
                 </tr>
               </thead>
               <tbody>
                 {snap.markets.map((m, idx) => {
                   const up = (m.change24h ?? 0) >= 0
                   return (
-                    <tr key={m.id} className="border-b border-white/5 hover:bg-white/5 transition">
-                      <td className="py-3 px-3 text-gray-500">{m.rank ?? idx + 1}</td>
-                      <td className="py-3 px-3">
-                        <div className="flex items-center gap-2">
+                    <tr key={m.id} className="border-b transition-all duration-300 hover:bg-white/5" style={{ borderColor: 'rgba(255, 215, 108, 0.05)' }}>
+                      <td className="py-4 px-4 text-gray-500 font-mono">{m.rank ?? idx + 1}</td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-3">
                           {m.image ? (
-                            <Image src={m.image} alt="" width={28} height={28} className="rounded-full" />
+                            <Image src={m.image} alt="" width={32} height={32} className="rounded-full shadow-[0_0_10px_rgba(255,215,108,0.2)]" />
                           ) : null}
                           <div>
-                            <div className="font-semibold text-white">{m.name}</div>
-                            <div className="text-xs text-gray-500">{m.symbol}</div>
+                            <div className="font-bold text-gray-100">{m.name}</div>
+                            <div className="text-xs text-yellow-500/70 font-mono tracking-widest">{m.symbol}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="py-3 px-3 text-right font-medium text-white tabular-nums">
+                      <td className="py-4 px-4 text-right font-bold text-white tabular-nums tracking-wide">
                         {formatUsd(m.price)}
                       </td>
-                      <td className="py-3 px-3 text-right hidden sm:table-cell">
+                      <td className="py-4 px-4 text-right hidden sm:table-cell">
                         <span
-                          className={`inline-flex items-center gap-0.5 font-semibold tabular-nums ${
+                          className={`inline-flex items-center gap-1 font-bold tabular-nums ${
                             up ? 'text-green-400' : 'text-red-400'
                           }`}
                         >
-                          {up ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
+                          {up ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                           {formatPct(m.change24h)}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-right text-gray-400 hidden md:table-cell tabular-nums">
+                      <td className="py-4 px-4 text-right text-gray-400 hidden md:table-cell tabular-nums font-mono">
                         {formatUsd(m.marketCap, true)}
                       </td>
                     </tr>

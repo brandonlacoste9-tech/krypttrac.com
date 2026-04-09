@@ -11,8 +11,11 @@ interface Message {
 }
 
 interface AIAgentProps {
-  dashboardData?: any
-  portfolioData?: any
+  dashboardData?: {
+    stablecoins?: Array<{ price: string; [key: string]: unknown }>
+    [key: string]: unknown
+  }
+  portfolioData?: Record<string, unknown>
 }
 
 export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
@@ -30,6 +33,25 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  useEffect(() => {
+    const handleOpenAgent = (e: CustomEvent) => {
+      setIsOpen(true)
+      if (e.detail?.message) {
+        // Option 1: Just set the input so the user can review it
+        // setInput(e.detail.message)
+        
+        // Option 2: Pre-fill and automatically run
+        // We defer it slightly to let the UI open
+        setTimeout(() => {
+          setInput(e.detail.message)
+        }, 100)
+      }
+    }
+    
+    window.addEventListener('OPEN_AI_AGENT', handleOpenAgent as EventListener)
+    return () => window.removeEventListener('OPEN_AI_AGENT', handleOpenAgent as EventListener)
+  }, [])
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return

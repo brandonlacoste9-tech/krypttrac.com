@@ -60,3 +60,5 @@ cache/
 # Rust/Cargo
 .cargo/
 target/
+
+/lib/generated/prisma
