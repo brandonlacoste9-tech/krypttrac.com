@@ -1,21 +1,12 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const isProtected = createRouteMatcher(['/dashboard(.*)', '/api/agent(.*)'])
-
-// If Clerk keys are missing, skip auth entirely so the site still loads
-const hasClerkKeys = !!(process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
-
-function fallbackMiddleware(req: NextRequest) {
+export default function middleware(req: NextRequest) {
+  // Clerk auth temporarily disabled — add CLERK_SECRET_KEY and
+  // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY to Vercel env vars, then
+  // re-enable clerkMiddleware.
   return NextResponse.next()
 }
-
-export default hasClerkKeys
-  ? clerkMiddleware(async (auth, req) => {
-      if (isProtected(req)) await auth.protect()
-    })
-  : fallbackMiddleware
 
 export const config = {
   matcher: [

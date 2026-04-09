@@ -1,9 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { WalletProvider } from '@/components/WalletProvider'
 
-/** Avoid static prerender without Clerk keys (CI / fresh clones). */
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
@@ -22,24 +21,36 @@ export const metadata: Metadata = {
   },
 }
 
-import { WalletProvider } from '@/components/WalletProvider'
+// Conditionally import ClerkProvider only when keys are available
+const hasClerk = !!(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+
+let ClerkProviderComponent: React.ComponentType<{ children: React.ReactNode }> | null = null
+if (hasClerk) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const clerk = require('@clerk/nextjs')
+  ClerkProviderComponent = clerk.ClerkProvider
+}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <ClerkProvider>
-      <html lang="en">
-        <body>
-          <WalletProvider>
-            <ThemeProvider>
-              {children}
-            </ThemeProvider>
-          </WalletProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+  const inner = (
+    <html lang="en">
+      <body>
+        <WalletProvider>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </WalletProvider>
+      </body>
+    </html>
   )
+
+  if (ClerkProviderComponent) {
+    return <ClerkProviderComponent>{inner}</ClerkProviderComponent>
+  }
+
+  return inner
 }

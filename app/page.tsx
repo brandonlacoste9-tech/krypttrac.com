@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function SplashScreen() {
   return (
@@ -92,41 +91,25 @@ export default function SplashScreen() {
         </p>
 
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <SignedIn>
-            <Link href="/dashboard">
-              <span
-                className="inline-block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer"
-                style={{
-                  background: 'linear-gradient(135deg, #FFD76C, #C49A2B)',
-                  color: '#1A0B2E',
-                  boxShadow: '0 8px 32px rgba(255, 215, 108, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.3)',
-                }}
-              >
-                Enter the Realm
-              </span>
-            </Link>
-          </SignedIn>
-          <SignedOut>
-            <Link href="/sign-in">
-              <span
-                className="inline-block px-10 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer"
-                style={{
-                  background: 'linear-gradient(135deg, #FFD76C, #C49A2B)',
-                  color: '#1A0B2E',
-                  boxShadow: '0 8px 32px rgba(255, 215, 108, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.3)',
-                }}
-              >
-                Sign in
-              </span>
-            </Link>
-            <Link href="/sign-up">
-              <span
-                className="inline-block px-10 py-4 rounded-full font-bold text-sm tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer border-2 border-yellow-400/50 text-yellow-200"
-              >
-                Create account
-              </span>
-            </Link>
-          </SignedOut>
+          <Link href="/dashboard">
+            <span
+              className="inline-block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer"
+              style={{
+                background: 'linear-gradient(135deg, #FFD76C, #C49A2B)',
+                color: '#1A0B2E',
+                boxShadow: '0 8px 32px rgba(255, 215, 108, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.3)',
+              }}
+            >
+              Enter the Realm
+            </span>
+          </Link>
+          <Link href="/sign-up">
+            <span
+              className="inline-block px-10 py-4 rounded-full font-bold text-sm tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer border-2 border-yellow-400/50 text-yellow-200"
+            >
+              Create account
+            </span>
+          </Link>
         </div>
 
         <div className="pt-6">

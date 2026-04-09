@@ -1,7 +1,6 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { useUser } from '@clerk/nextjs'
 
 type Theme = 'royal' | 'platinum'
 
@@ -14,16 +13,26 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const { user } = useUser()
   const [theme, setThemeState] = useState<Theme>('royal')
   const [canUsePlatinum, setCanUsePlatinum] = useState(false)
 
+  // Try to get user from Clerk if available
+  let user: Record<string, unknown> | null | undefined = null
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const clerk = require('@clerk/nextjs')
+    const result = clerk.useUser()
+    user = result?.user
+  } catch {
+    // Clerk not available — proceed without user
+  }
+
   useEffect(() => {
-    // Check user tier from Clerk metadata
-    const userTier = user?.publicMetadata?.tier as string || 'free'
+    const userTier = (user as Record<string, unknown>)?.publicMetadata
+      ? ((user as Record<string, unknown>).publicMetadata as Record<string, string>)?.tier || 'free'
+      : 'free'
     setCanUsePlatinum(userTier === 'platinum')
 
-    // Load saved theme preference
     const saved = localStorage.getItem('kk-theme') as Theme
     if (saved && (saved === 'royal' || (saved === 'platinum' && userTier === 'platinum'))) {
       setThemeState(saved)
@@ -31,7 +40,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [user])
 
   useEffect(() => {
-    // Apply theme to body
     document.body.className = `theme-${theme}`
     localStorage.setItem('kk-theme', theme)
   }, [theme])
@@ -42,10 +50,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       return
     }
     setThemeState(newTheme)
-    
-    // Play voice line when platinum activated (optional)
     if (newTheme === 'platinum' && canUsePlatinum) {
-      // Add audio playback here if you have a voice line
       console.log('👑 Platinum Suite Activated')
     }
   }
