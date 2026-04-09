@@ -2,6 +2,9 @@ import { Anthropic } from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchDashboardSnapshot } from '@/lib/server/market-fetch'
 import { parseUsdString } from '@/lib/dashboard-context'
+import { fetchTwitterSentiment, fetchDefiLlamaYields } from '@/lib/server/apify'
+
+export const maxDuration = 60
 
 export async function POST(request: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY
@@ -78,12 +81,71 @@ Act fast, sound like a Wall Street quant mixed with a crypto native.`
 
     const anthropic = new Anthropic({ apiKey })
 
-    const response = await anthropic.messages.create({
+    const tools: Anthropic.Tool[] = [
+      {
+        name: 'get_twitter_sentiment',
+        description: 'Fetch real-time Twitter/X chatter and sentiment about a specific crypto asset using Apify. Use this whenever the user asks about sentiment, social media, or what people are saying online.',
+        input_schema: {
+          type: 'object',
+          properties: { asset: { type: 'string', description: 'The crypto asset to search for (e.g. "Solana" or "$SOL")' } },
+          required: ['asset']
+        }
+      },
+      {
+        name: 'get_defi_yields',
+        description: 'Search for the latest DeFi yields or APY for a specific protocol or global stablecoins. Use this when the user asks for high yields, staking rates, or DefiLlama data.',
+        input_schema: {
+          type: 'object',
+          properties: { protocol: { type: 'string', description: 'The protocol to search for (e.g. "Aave", "Curve", or leave empty for total market yields)' } }
+        }
+      }
+    ]
+
+    const messages: Anthropic.MessageParam[] = [{ role: 'user', content: message }]
+
+    let response = await anthropic.messages.create({
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 500,
       system: systemPrompt,
-      messages: [{ role: 'user', content: message }],
+      messages,
+      tools
     })
+
+    // Handle tool execution if the AI decided to use Apify
+    if (response.stop_reason === 'tool_use') {
+      const toolUse = response.content.find(c => c.type === 'tool_use') as Anthropic.ToolUseBlock;
+      let toolResultText = ""
+
+      if (toolUse.name === 'get_twitter_sentiment') {
+        const input = toolUse.input as { asset: string }
+        toolResultText = await fetchTwitterSentiment(input.asset)
+      } else if (toolUse.name === 'get_defi_yields') {
+        const input = toolUse.input as { protocol?: string }
+        toolResultText = await fetchDefiLlamaYields(input.protocol)
+      }
+
+      // Add assistant command and tool response back to the conversation
+      messages.push({ role: 'assistant', content: response.content })
+      messages.push({
+        role: 'user',
+        content: [
+          {
+            type: 'tool_result',
+            tool_use_id: toolUse.id,
+            content: toolResultText,
+          }
+        ]
+      })
+
+      // Get final response synthesizing the Apify data
+      response = await anthropic.messages.create({
+        model: 'claude-3-5-haiku-20241022',
+        max_tokens: 500,
+        system: systemPrompt,
+        messages,
+        tools
+      })
+    }
 
     const reply =
       response.content[0].type === 'text' ? response.content[0].text : 'Unable to process request'
