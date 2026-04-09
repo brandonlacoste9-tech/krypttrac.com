@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { ThemeProvider } from '@/components/ThemeProvider'
+import { AppProviders } from '@/components/AppProviders'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,9 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="theme-royal">
-        <ThemeProvider>
+        <AppProviders>
           {children}
-        </ThemeProvider>
+        </AppProviders>
       </body>
     </html>
   )
