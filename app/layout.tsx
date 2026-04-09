@@ -1,23 +1,11 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { ThemeProvider } from '@/components/ThemeProvider'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Krypto Kings - Rule Your Portfolio',
   description: 'Command your crypto empire with royal precision.',
-  icons: {
-    icon: '/kk-logo.png',
-    apple: '/kk-logo.png',
-  },
-  openGraph: {
-    title: 'Krypto Kings - Rule Your Portfolio',
-    description: 'Digital sovereignty meets luxury',
-    url: 'https://kryptokings.app',
-    siteName: 'Krypto Kings',
-    type: 'website',
-  },
 }
 
 export default function RootLayout({
@@ -27,10 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+      <body style={{ background: '#1A0B2E', color: 'white', margin: 0, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {children}
       </body>
     </html>
   )
