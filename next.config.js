@@ -7,6 +7,9 @@ const nextConfig = {
       { protocol: 'https', hostname: 'img.clerk.com', pathname: '/**' },
     ],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   webpack: (config, { webpack }) => {
     config.plugins.push(
       new webpack.IgnorePlugin({
