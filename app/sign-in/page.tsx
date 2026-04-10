@@ -5,11 +5,12 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, Github, Lock, ArrowRight, Satellite } from 'lucide-react'
+import { Mail, Github, Lock, Eye, EyeOff, ArrowRight, Satellite } from 'lucide-react'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
@@ -88,17 +89,27 @@ export default function SignInPage() {
               </div>
 
               <div className="space-y-2">
-                 <label className="text-[9px] font-black tracking-[0.3em] text-gray-400 uppercase px-1">Security Key</label>
+                 <div className="flex items-center justify-between px-1">
+                   <label className="text-[9px] font-black tracking-[0.3em] text-gray-400 uppercase">Security Key</label>
+                   <Link href="#" className="text-[8px] font-black tracking-[0.2em] text-amber-500/60 hover:text-amber-500 transition-colors uppercase">Recover Access</Link>
+                 </div>
                  <div className="relative group">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600 group-focus-within:text-amber-500 transition-colors" />
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       required
                       placeholder="••••••••"
-                      className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-amber-500/50 focus:bg-white/10 transition-all font-medium"
+                      className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-12 text-white text-sm focus:outline-none focus:border-amber-500/50 focus:bg-white/10 transition-all font-medium"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-white transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                  </div>
               </div>
 
