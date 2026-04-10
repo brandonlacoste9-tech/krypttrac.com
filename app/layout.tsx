@@ -19,14 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="theme-royal">
+    <html lang="en">
+      <body className="theme-royal">
+        <ClerkProvider>
           <AppProviders>
             {children}
           </AppProviders>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   )
 }
