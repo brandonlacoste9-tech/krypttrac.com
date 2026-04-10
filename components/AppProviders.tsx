@@ -29,7 +29,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
   }, [])
 
   if (!mounted) {
-    return <div className="min-h-screen bg-[#1A0B2E]" />
+    return <div className="min-h-screen bg-[#050507]" />
   }
 
   return (
