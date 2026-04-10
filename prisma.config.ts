@@ -9,6 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Falls back to a dummy URL during build if Vercel secrets are hidden
+    url: process.env["DATABASE_URL"] || "postgresql://postgres:password@localhost:5432/postgres",
   },
 });
