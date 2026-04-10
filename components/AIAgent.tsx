@@ -109,7 +109,7 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
             ? 'bg-gradient-to-br from-red-600 to-orange-600 animate-pulse'
             : 'bg-gradient-to-br from-purple-600 via-pink-600 to-purple-700'
         } text-white rounded-full p-4 shadow-2xl hover:scale-110 transition-all`}
-        title={hasDepegs ? 'Stablecoin Alert!' : 'Ask Krypto Kings AI'}
+        title={hasDepegs ? 'Stablecoin Alert!' : 'Ask kryptotrac AI'}
       >
         {hasDepegs ? <TrendingUp className="w-7 h-7" /> : <Sparkles className="w-7 h-7" />}
       </button>
@@ -126,9 +126,9 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
               {hasDepegs ? <TrendingUp className="w-6 h-6 text-white" /> : <Sparkles className="w-6 h-6 text-white" />}
             </div>
             <div>
-              <h3 className="font-bold text-white text-lg">Krypto Kings AI</h3>
+              <h3 className="font-bold text-white text-lg">kryptotrac AI</h3>
               <p className="text-xs text-gray-400">
-                {hasDepegs ? '⚠️ Stablecoin Alert' : 'Built for Kings 👑'}
+                {hasDepegs ? '⚠️ Stablecoin Alert' : 'Built for precision'}
               </p>
             </div>
           </div>
@@ -159,8 +159,8 @@ export function AIAgent({ dashboardData, portfolioData }: AIAgentProps) {
               </>
             ) : (
               <>
-                <div className="text-7xl">👑</div>
-                <p className="text-xl font-bold text-white">What&apos;s Good King?</p>
+                <div className="text-7xl">📡</div>
+                <p className="text-xl font-bold text-white">How can I help?</p>
                 <div className="mt-6 text-left bg-purple-900/20 border border-purple-500/20 rounded-xl p-4 space-y-2 text-sm text-gray-300">
                   <p className="font-semibold text-white mb-3">Try asking:</p>
                   <p>• &quot;Why is Solana moomin&apos;?&quot; 🚀</p>

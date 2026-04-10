@@ -41,10 +41,10 @@ export default function SplashScreen() {
         {/* Title */}
         <div className="space-y-2">
           <h1 className="text-5xl md:text-6xl font-black tracking-wider gold-text uppercase">
-            Krypto Kings
+            kryptotrac.com
           </h1>
           <p className="text-xl font-light text-gray-300">
-            Rule Your Portfolio.
+            Trace the wealth. Rule the market.
           </p>
         </div>
 
@@ -52,13 +52,13 @@ export default function SplashScreen() {
           {status === 'authenticated' ? (
             <Link href="/dashboard" className="w-full sm:w-auto">
               <span className="block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer bg-gradient-to-r from-[#FFD76C] to-[#C49A2B] text-[#1A0B2E] shadow-[0_8px_32px_rgba(255,215,108,0.3)]">
-                Command Center
+                Dashboard
               </span>
             </Link>
           ) : (
             <Link href="/sign-up" className="w-full sm:w-auto">
               <span className="block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer bg-gradient-to-r from-[#FFD76C] to-[#C49A2B] text-[#1A0B2E] shadow-[0_8px_32px_rgba(255,215,108,0.3)]">
-                Join the Realm
+                Get Started
               </span>
             </Link>
           )}

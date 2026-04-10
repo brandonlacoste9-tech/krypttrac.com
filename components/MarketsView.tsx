@@ -35,7 +35,7 @@ export function MarketsView() {
       <header className="flex flex-wrap items-center justify-between gap-4 px-4 py-4 max-w-5xl mx-auto border-b border-white/10">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/kk-logo.png" width={40} height={40} alt="" className="rounded-lg shadow-[0_0_15px_rgba(255,215,108,0.2)]" />
-          <span className="font-bold tracking-tighter gold-text text-xl">KRYPTO KINGS</span>
+          <span className="font-bold tracking-tighter gold-text text-xl">KRYPTOTRAC</span>
         </Link>
         <div className="flex items-center gap-3">
           {status === 'unauthenticated' ? (

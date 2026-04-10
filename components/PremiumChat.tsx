@@ -8,31 +8,31 @@ interface Message {
   id: string
   userId: string
   username: string
-  tier: 'silver' | 'gold' | 'platinum'
+  tier: 'noble' | 'royal'
   content: string
   timestamp: Date
 }
 
 interface PremiumChatProps {
-  userTier?: 'free' | 'silver' | 'gold' | 'platinum'
+  userTier?: 'citizen' | 'noble' | 'royal'
   userId?: string
 }
 
-export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
+export function PremiumChat({ userTier = 'citizen', userId }: PremiumChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       userId: 'system',
-      username: 'Krypto Kings Bot',
-      tier: 'platinum',
-      content: 'Welcome to the Kings Lounge 👑 Gold and Platinum members only!',
+      username: 'kryptotrac Intelligence',
+      tier: 'royal',
+      content: 'Welcome to the Elite Terminal 🚀 Professional and Institutional members only!',
       timestamp: new Date(),
     }
   ])
   const [input, setInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const canAccess = userTier === 'gold' || userTier === 'platinum'
+  const canAccess = userTier === 'noble' || userTier === 'royal'
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -44,8 +44,8 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
     const newMessage: Message = {
       id: Date.now().toString(),
       userId: userId || 'user-123',
-      username: userTier === 'platinum' ? '💎 Platinum King' : '👑 Gold King',
-      tier: userTier as 'gold' | 'platinum',
+      username: userTier === 'royal' ? 'Royal Insider' : 'Noble Member',
+      tier: userTier as 'noble' | 'royal',
       content: input,
       timestamp: new Date(),
     }
@@ -64,41 +64,41 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
 
         <div className="space-y-3">
           <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-            Kings Lounge 👑
+            Elite Terminal
           </h3>
           <p className="text-gray-400 max-w-md">
-            Exclusive chat for Gold and Platinum Kings only. Connect with premium members, share alpha, and get priority AI support.
+            Exclusive terminal for Noble and Royal members only. Connect with precision-focused traders, share alpha, and get priority support.
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-4 w-full max-w-2xl">
           <div className="bg-slate-800/50 border border-yellow-500/30 rounded-xl p-6 space-y-4">
             <div className="text-4xl">👑</div>
-            <h4 className="text-xl font-bold text-yellow-400">Gold King</h4>
-            <p className="text-2xl font-bold text-white">$24.99<span className="text-sm text-gray-400">/mo</span></p>
+            <h4 className="text-xl font-bold text-yellow-400">Noble Tier</h4>
+            <p className="text-2xl font-bold text-white">$29.00<span className="text-sm text-gray-400">/mo</span></p>
             <ul className="text-sm text-gray-300 space-y-2 text-left">
-              <li>✓ Kings Lounge access</li>
-              <li>✓ Unlimited coins</li>
-              <li>✓ Advanced analytics</li>
+              <li>✓ Elite Terminal access</li>
+              <li>✓ Unlimited wallet syncing</li>
+              <li>✓ Noble Intelligence</li>
               <li>✓ Priority support</li>
             </ul>
             <button className="w-full py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-700 hover:to-yellow-600 rounded-lg text-white font-semibold transition-all hover:scale-105">
-              Upgrade to Gold
+              Upgrade to Noble
             </button>
           </div>
 
           <div className="bg-slate-800/50 border border-purple-500/50 rounded-xl p-6 space-y-4 shadow-xl shadow-purple-500/20">
             <div className="text-4xl">💎</div>
-            <h4 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Platinum King</h4>
-            <p className="text-2xl font-bold text-white">$49.99<span className="text-sm text-gray-400">/mo</span></p>
+            <h4 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Royal Tier</h4>
+            <p className="text-2xl font-bold text-white">$99.00<span className="text-sm text-gray-400">/mo</span></p>
             <ul className="text-sm text-gray-300 space-y-2 text-left">
-              <li>✓ Everything in Gold</li>
-              <li>✓ AI chat commands (@ai)</li>
-              <li>✓ Voice announcements</li>
+              <li>✓ Everything in Noble</li>
+              <li>✓ Royal Intelligence (@ai)</li>
+              <li>✓ Whale tracking alerts</li>
               <li>✓ White-glove support</li>
             </ul>
             <button className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white font-semibold transition-all hover:scale-105">
-              Go Platinum
+              Ascend to Royal
             </button>
           </div>
         </div>
@@ -114,11 +114,11 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
           <div className="flex items-center gap-3">
             <Crown className="w-6 h-6 text-yellow-400" />
             <div>
-              <h3 className="font-bold text-white text-lg">Kings Lounge</h3>
-              <p className="text-xs text-gray-400">Gold & Platinum Members Only</p>
+              <h3 className="font-bold text-white text-lg">Elite Terminal</h3>
+              <p className="text-xs text-gray-400">Noble & Royal Members Only</p>
             </div>
           </div>
-          <TierBadge tier={userTier} size="sm" />
+          <TierBadge tier={userTier as any} size="sm" />
         </div>
       </div>
 
@@ -127,16 +127,16 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
         {messages.map((msg) => (
           <div key={msg.id} className="flex gap-3">
             <div className={`w-10 h-10 rounded-full ${
-              msg.tier === 'platinum'
+              msg.tier === 'royal'
                 ? 'bg-gradient-to-br from-purple-600 to-pink-600'
                 : 'bg-gradient-to-br from-yellow-600 to-yellow-500'
             } flex items-center justify-center flex-shrink-0`}>
-              {msg.tier === 'platinum' ? '💎' : '👑'}
+              {msg.tier === 'royal' ? '💎' : '👑'}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-semibold text-white text-sm">{msg.username}</span>
-                <TierBadge tier={msg.tier} size="sm" />
+                <TierBadge tier={msg.tier as any} size="sm" />
                 <span className="text-xs text-gray-500">
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
@@ -156,7 +156,7 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-            placeholder={userTier === 'platinum' ? 'Message the kings... 💎' : 'Message the gold members... 👑'}
+            placeholder={userTier === 'royal' ? 'Message the royal terminal... 📡' : 'Message the noble desk... 📡'}
             className="flex-1 bg-slate-800/60 border border-purple-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           <button
@@ -167,10 +167,10 @@ export function PremiumChat({ userTier = 'free', userId }: PremiumChatProps) {
           </button>
         </div>
 
-        {userTier === 'platinum' && (
+        {userTier === 'royal' && (
           <div className="mt-3 flex items-center gap-2 text-xs text-purple-400">
             <Sparkles className="w-4 h-4" />
-            <span>Platinum Perk: Use @ai to ask questions in chat</span>
+            <span>Royal Perk: Use @ai to ask questions in chat</span>
           </div>
         )}
       </div>

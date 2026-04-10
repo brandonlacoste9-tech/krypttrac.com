@@ -35,7 +35,7 @@ export function Footer() {
 
         {/* Bottom row - Copyright */}
         <div className="mt-6 pt-6 border-t border-slate-800 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} Krypto Kings. Built for Kings 👑 Powered by premium technology.
+          © {new Date().getFullYear()} kryptotrac. Built for precision. Powered by premium technology.
         </div>
       </div>
     </footer>
