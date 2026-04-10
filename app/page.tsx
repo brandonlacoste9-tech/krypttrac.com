@@ -41,7 +41,7 @@ export default function SplashScreen() {
         {/* Title */}
         <div className="space-y-2">
           <h1 className="text-5xl md:text-6xl font-black tracking-wider gold-text uppercase">
-            kryptotrac.com
+            kryptotrac
           </h1>
           <p className="text-xl font-light text-gray-300">
             Trace the wealth. Rule the market.

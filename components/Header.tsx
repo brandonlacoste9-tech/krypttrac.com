@@ -18,7 +18,7 @@ export default function Header() {
           <div className="p-2 rounded-xl bg-white/5 group-hover:bg-white/10 transition-all border border-white/5 group-hover:border-yellow-500/30">
             <Image src="/kk-logo.png" width={32} height={32} alt="Logo" />
           </div>
-          <span className="text-xl font-black tracking-tighter gold-text uppercase">kryptotrac.com</span>
+          <span className="text-xl font-black tracking-tighter gold-text uppercase">kryptotrac</span>
         </Link>
 
         {/* Desktop Nav */}

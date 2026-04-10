@@ -98,7 +98,7 @@ export default function PricingPage() {
         {/* Header Section */}
         <div className="text-center mb-20">
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 gold-text uppercase">
-            kryptotrac.com
+            kryptotrac
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto font-medium">
             Master the data. Trace the wealth. 
