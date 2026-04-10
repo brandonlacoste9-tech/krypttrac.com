@@ -4,10 +4,11 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1A0B2E] via-purple-900 to-[#1A0B2E] flex items-center justify-center p-4">
       <div className="relative">
-        {/* Decorative backdrop glow */}
         <div className="absolute -inset-4 bg-[#FFD76C]/10 blur-3xl rounded-full" />
         
         <SignUp
+          routing="path"
+          path="/sign-up"
           appearance={{
             elements: {
               rootBox: "mx-auto",

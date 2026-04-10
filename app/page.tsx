@@ -54,7 +54,7 @@ export default function SplashScreen() {
           </SignedIn>
           
           <SignedOut>
-            <Link href="/sign-in" className="w-full sm:w-auto">
+            <Link href="/sign-up" className="w-full sm:w-auto">
               <span className="block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer bg-gradient-to-r from-[#FFD76C] to-[#C49A2B] text-[#1A0B2E] shadow-[0_8px_32px_rgba(255,215,108,0.3)]">
                 Join the Realm
               </span>
