@@ -13,47 +13,44 @@ interface TierBadgeProps {
 
 export function TierBadge({ tier, size = 'md', showLabel = true }: TierBadgeProps) {
   const sizes = {
-    sm: { icon: 'w-4 h-4', badge: 'text-[10px] px-2 py-0.5', image: 16 },
-    md: { icon: 'w-5 h-5', badge: 'text-xs px-2.5 py-1', image: 20 },
-    lg: { icon: 'w-6 h-6', badge: 'text-sm px-3 py-1.5', image: 24 }
+    sm: { icon: 'w-4 h-4', badge: 'text-[9px] px-2 py-0.5', image: 16 },
+    md: { icon: 'w-5 h-5', badge: 'text-[10px] px-2.5 py-1', image: 20 },
+    lg: { icon: 'w-6 h-6', badge: 'text-[11px] px-3 py-1.5', image: 24 }
   }
 
   const config = {
     citizen: {
       icon: <Shield className={sizes[size].icon} />,
-      logo: false,
       label: 'CITIZEN',
-      gradient: 'from-gray-600 to-gray-500',
-      textColor: 'text-gray-100',
+      gradient: 'from-slate-700 to-slate-800',
+      textColor: 'text-slate-300',
+      borderColor: 'border-slate-600/30',
       glow: false,
-      show: true
     },
     noble: {
       icon: <Zap className={sizes[size].icon} />,
-      logo: false,
       label: 'NOBLE',
-      gradient: 'from-yellow-600 via-yellow-500 to-yellow-600',
-      textColor: 'text-white',
-      glow: false,
-      show: true
+      gradient: 'from-amber-600 via-amber-500 to-amber-700',
+      textColor: 'text-black',
+      borderColor: 'border-amber-500/30',
+      glow: true,
+      glowColor: 'shadow-amber-500/20'
     },
     royal: {
       icon: <Crown className={sizes[size].icon} />,
-      logo: false,
       label: 'ROYAL',
-      gradient: 'from-purple-600 via-pink-600 to-purple-600',
-      textColor: 'text-white',
+      gradient: 'from-slate-200 via-white to-slate-400',
+      textColor: 'text-black',
+      borderColor: 'border-white/30',
       glow: true,
-      show: true
+      glowColor: 'shadow-white/20'
     }
   }
 
   const badge = config[tier]
 
-  if (!badge?.show) return null
-
   return (
-    <div className={`inline-flex items-center gap-1.5 bg-gradient-to-r ${badge.gradient} rounded-full ${sizes[size].badge} font-bold ${badge.textColor} shadow-lg ${badge.glow ? 'shadow-purple-500/50' : ''}`}>
+    <div className={`inline-flex items-center gap-1.5 bg-gradient-to-r ${badge.gradient} rounded-full ${sizes[size].badge} font-black tracking-[0.2em] ${badge.textColor} border ${badge.borderColor} shadow-lg ${badge.glow ? badge.glowColor : ''} uppercase`}>
       {badge.icon}
       {showLabel && <span>{badge.label}</span>}
     </div>

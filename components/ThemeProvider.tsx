@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { useSession } from 'next-auth/react'
 
 type Theme = 'royal' | 'platinum'
 
@@ -13,14 +14,16 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  const { data: session } = useSession()
   const [theme, setThemeState] = useState<Theme>('royal')
-  const [canUsePlatinum] = useState(false)
   const [mounted, setMounted] = useState(false)
+
+  const canUsePlatinum = session?.user?.tier === 'royal'
 
   useEffect(() => {
     setMounted(true)
     const saved = localStorage.getItem('kt-theme') as Theme
-    if (saved && saved === 'royal') {
+    if (saved && (saved === 'royal' || saved === 'platinum')) {
       setThemeState(saved)
     }
   }, [])
@@ -39,12 +42,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setThemeState(newTheme)
   }
 
-  // Prevent hydration mismatch by returning empty div or just children without theme applied until mounted
+  // Prevent hydration flicker
+  if (!mounted) {
+    return <div className="min-h-screen bg-[#050507]">{children}</div>
+  }
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme, canUsePlatinum }}>
-      <div style={{ visibility: mounted ? 'visible' : 'hidden' }}>
-        {children}
-      </div>
+      {children}
     </ThemeContext.Provider>
   )
 }

@@ -1,8 +1,7 @@
 'use client'
 
-import { Check, Star, Zap, Crown, Shield } from 'lucide-react'
+import { Check, Zap, Crown, Shield } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 
 const TIERS = [
@@ -17,11 +16,11 @@ const TIERS = [
       'Public Access Terminal',
       'Community Insights'
     ],
-    icon: <Shield className="w-6 h-6 text-gray-400" />,
+    icon: <Shield className="w-6 h-6 text-slate-400" />,
     buttonText: 'Current Plan',
     buttonHref: '/dashboard',
     highlight: false,
-    gradient: 'from-gray-900 to-[#050507]'
+    gradient: 'from-slate-900 to-[#050507]'
   },
   {
     name: 'Noble',
@@ -54,11 +53,11 @@ const TIERS = [
       'Royal Elite Badge',
       'Concierge AI Support'
     ],
-    icon: <Crown className="w-6 h-6 text-purple-500" />,
+    icon: <Crown className="w-6 h-6 text-slate-100" />,
     buttonText: 'Claim Your Throne',
     buttonHref: '/api/stripe/checkout?priceId=royal',
     highlight: false,
-    gradient: 'from-purple-900/20 to-[#050507]'
+    gradient: 'from-slate-400/10 to-[#050507]'
   }
 ]
 
@@ -82,15 +81,15 @@ export default function PricingPage() {
         {/* Header Section */}
         <div className="text-center mb-24">
           <div className="inline-block px-4 py-1 border border-amber-500/30 rounded-full mb-6">
-            <span className="text-[10px] font-bold tracking-[0.4em] text-amber-500 uppercase">
+            <span className="text-[10px] font-black tracking-[0.4em] text-amber-500 uppercase">
               Subscription Tiers
             </span>
           </div>
           <h1 className="text-6xl md:text-8xl font-light tracking-[0.2em] mb-6 text-white uppercase font-serif luxury-text">
             kryptotrac
           </h1>
-          <p className="text-sm md:text-base font-light tracking-[0.5em] text-gray-400 uppercase max-w-2xl mx-auto">
-            Select your rank in the global network.
+          <p className="text-[10px] font-black tracking-[0.6em] text-gray-500 uppercase max-w-2xl mx-auto">
+            SELECT YOUR RANK IN THE GLOBAL NETWORK
           </p>
         </div>
 
@@ -103,7 +102,7 @@ export default function PricingPage() {
                 tier.highlight ? 'bg-gradient-to-b from-amber-500/50 via-amber-900/10 to-transparent shadow-[0_30px_100px_rgba(251,191,36,0.1)]' : 'bg-white/5'
               }`}
             >
-              <div className={`h-full rounded-[2.4rem] p-10 bg-gradient-to-b ${tier.gradient} backdrop-blur-xl flex flex-col`}>
+              <div className={`h-full rounded-[2.4rem] p-10 bg-gradient-to-b ${tier.gradient} backdrop-blur-3xl flex flex-col`}>
                 <div className="flex items-center justify-between mb-8">
                   <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
                     {tier.icon}
@@ -120,20 +119,20 @@ export default function PricingPage() {
                 </h3>
                 <div className="flex items-baseline gap-1 mb-6">
                   <span className="text-5xl font-light text-white tracking-tighter">{tier.price}</span>
-                  <span className="text-gray-500 text-sm tracking-widest uppercase">/mo</span>
+                  <span className="text-[10px] font-black text-gray-500 tracking-widest uppercase ml-1">/ mo</span>
                 </div>
 
-                <p className="text-gray-400 text-sm font-medium mb-10 tracking-wide">
+                <p className="text-gray-400 text-[11px] font-medium mb-10 tracking-[0.05em] leading-relaxed">
                   {tier.description}
                 </p>
 
-                <div className="space-y-5 mb-12 flex-grow">
+                <div className="space-y-6 mb-12 flex-grow">
                   {tier.features.map((feature) => (
                     <div key={feature} className="flex items-center gap-4 group/item">
                       <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/item:border-amber-500/30 transition-colors">
                         <Check className="w-3 h-3 text-amber-500" />
                       </div>
-                      <span className="text-sm text-gray-300 font-light tracking-wide">{feature}</span>
+                      <span className="text-xs text-gray-300 font-light tracking-wide uppercase">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -144,8 +143,8 @@ export default function PricingPage() {
                 >
                   <button className={`w-full py-5 rounded-2xl text-[11px] font-black tracking-[0.3em] uppercase transition-all duration-500 ${
                     tier.highlight 
-                      ? 'bg-amber-500 text-black hover:bg-white' 
-                      : 'bg-white/5 text-white border border-white/10 hover:bg-white hover:text-black'
+                      ? 'bg-amber-500 text-black hover:bg-white hover:scale-105 shadow-[0_10px_30px_rgba(251,191,36,0.2)]' 
+                      : 'bg-white/5 text-white border border-white/10 hover:bg-white hover:text-black hover:scale-105'
                   }`}>
                     {tier.buttonText}
                   </button>
@@ -157,7 +156,7 @@ export default function PricingPage() {
 
         {/* Bottom Guarantee */}
         <div className="mt-24 text-center">
-            <p className="text-[9px] tracking-[0.8em] text-white/20 uppercase font-bold">
+            <p className="text-[10px] tracking-[0.8em] text-white/20 uppercase font-black">
               Institutional Grade Security — SSL ENCRYPTED
             </p>
         </div>
