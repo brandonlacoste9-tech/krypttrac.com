@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { formatPct, formatUsd } from '@/lib/dashboard-context'
 import type { DashboardSnapshot } from '@/lib/server/market-fetch'
 import { TrendingDown, TrendingUp } from 'lucide-react'
@@ -37,23 +36,13 @@ export function MarketsView() {
           <span className="font-bold tracking-wide gold-text">KRYPTO KINGS</span>
         </Link>
         <div className="flex items-center gap-3">
-          <SignedOut>
-            <Link
-              href="/sign-in"
-              className="text-sm font-medium text-yellow-400 hover:text-yellow-300 transition"
-            >
-              Sign in
-            </Link>
-          </SignedOut>
-          <SignedIn>
-            <Link
-              href="/dashboard"
-              className="text-sm font-medium text-gray-300 hover:text-white transition mr-2"
-            >
-              Dashboard
-            </Link>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
+          {/* Clerk auth temporarily disabled */}
+          <Link
+            href="/dashboard"
+            className="text-sm font-medium text-gray-300 hover:text-white transition mr-2"
+          >
+            Dashboard
+          </Link>
         </div>
       </header>
 
