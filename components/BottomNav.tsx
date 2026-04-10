@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, TrendingUp, Wallet, Clock, Settings } from 'lucide-react'
+import { LayoutGrid, TrendingUp, Wallet, List, User } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -8,69 +8,54 @@ export function BottomNav() {
   const pathname = usePathname()
 
   const navItems = [
-    { id: 'home', href: '/dashboard', icon: Home, label: 'Home' },
+    { id: 'home', href: '/dashboard', icon: LayoutGrid, label: 'Portal' },
     { id: 'charts', href: '/markets', icon: TrendingUp, label: 'Markets' },
-    { id: 'wallet', href: '#', icon: Wallet, label: 'Wallet', soon: true },
-    { id: 'history', href: '#', icon: Clock, label: 'History', soon: true },
-    { id: 'settings', href: '#', icon: Settings, label: 'Settings', soon: true },
+    { id: 'pricing', href: '/pricing', icon: Wallet, label: 'Noble' },
+    { id: 'history', href: '#', icon: List, label: 'Feed', soon: true },
+    { id: 'settings', href: '#', icon: User, label: 'Profile', soon: true },
   ]
 
   return (
-    <nav className="bottom-nav fixed bottom-0 left-0 right-0 pb-safe">
-      <div className="flex items-center justify-around py-4 px-6">
-        {navItems.map((item) => {
-          const isActive =
-            item.href !== '#' && (pathname === item.href || pathname?.startsWith(item.href + '/'))
-          const inner = (
-            <>
-              <div
-                className={`p-2 rounded-xl transition-all ${
-                  isActive ? 'scale-110' : ''
-                }`}
-                style={{
-                  background: isActive
-                    ? 'linear-gradient(135deg, rgba(255, 215, 108, 0.2), rgba(196, 154, 43, 0.3))'
-                    : 'transparent',
-                  boxShadow: isActive ? '0 0 20px rgba(255, 215, 108, 0.3)' : 'none',
-                }}
-              >
-                <item.icon
-                  className={`w-6 h-6 ${
-                    isActive ? 'text-yellow-400' : item.soon ? 'text-gray-600' : 'text-gray-400'
-                  }`}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-lg z-50">
+      <nav className="relative rounded-[2rem] bg-[#0C0C0E]/80 backdrop-blur-3xl border border-white/10 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+        <div className="flex items-center justify-around relative">
+          {navItems.map((item) => {
+            const isActive =
+              item.href !== '#' && (pathname === item.href || pathname?.startsWith(item.href + '/'))
+            
+            const content = (
+              <div className="flex flex-col items-center gap-1.5 py-2 px-4 transition-all duration-300">
+                <div className={`relative transition-all duration-500 ${isActive ? 'scale-110 -translate-y-1' : 'opacity-40 hover:opacity-100'}`}>
+                  <item.icon
+                    className={`w-6 h-6 ${isActive ? 'text-amber-500' : 'text-white'}`}
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+                  {isActive && (
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] animate-pulse" />
+                  )}
+                </div>
+                <span className={`text-[8px] font-black tracking-[0.2em] uppercase transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/30'}`}>
+                  {item.label}
+                </span>
               </div>
-              <span
-                className={`text-xs ${
-                  isActive ? 'text-yellow-400 font-bold' : item.soon ? 'text-gray-600' : 'text-gray-500'
-                }`}
-              >
-                {item.label}
-              </span>
-            </>
-          )
+            )
 
-          return item.soon ? (
-            <button
-              key={item.id}
-              type="button"
-              title="Coming soon"
-              className="flex flex-col items-center gap-1 transition-all opacity-60 cursor-not-allowed"
-            >
-              {inner}
-            </button>
-          ) : (
-            <Link
-              key={item.id}
-              href={item.href}
-              className="flex flex-col items-center gap-1 transition-all"
-            >
-              {inner}
-            </Link>
-          )
-        })}
-      </div>
-    </nav>
+            if (item.soon) {
+              return (
+                <div key={item.id} className="cursor-not-allowed opacity-30 grayscale saturate-0" title="Restricted Suite">
+                  {content}
+                </div>
+              )
+            }
+
+            return (
+              <Link key={item.id} href={item.href} className="flex-1">
+                {content}
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
+    </div>
   )
 }

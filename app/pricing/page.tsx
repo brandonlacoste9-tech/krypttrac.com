@@ -1,194 +1,176 @@
 'use client'
 
+import { Check, Star, Zap, Crown, Shield } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
-import { Check, Crown, Shield, Zap, Star } from 'lucide-react'
-import Header from '@/components/Header'
+import { useSession } from 'next-auth/react'
 
-const tiers = [
+const TIERS = [
   {
-    id: 'citizen',
     name: 'Citizen',
+    id: 'free',
     price: '$0',
-    description: 'Establish your presence in the realm.',
+    description: 'Foundation for every wealth builder.',
     features: [
-      'Basic Portfolio Tracking',
-      '3 Wallet Connections',
-      'Daily Market Summaries',
-      'Standard Support',
+      'Basic Market Intelligence',
+      'Real-time Asset Tracking',
+      'Public Access Terminal',
+      'Community Insights'
     ],
-    buttonText: 'Current Status',
+    icon: <Shield className="w-6 h-6 text-gray-400" />,
+    buttonText: 'Current Plan',
+    buttonHref: '/dashboard',
     highlight: false,
-    color: 'gray',
-    icon: <Shield className="w-8 h-8 text-gray-400" />,
+    gradient: 'from-gray-900 to-[#050507]'
   },
   {
-    id: 'noble',
     name: 'Noble',
+    id: 'noble',
     price: '$29',
-    description: 'For those who seek the path of wealth.',
+    description: 'Elevated precision for active tracers.',
     features: [
-      'Unlimited Wallet Connections',
-      'Real-time Alpha Alerts',
-      'Advanced AI Market Insights',
-      'Priority Support',
-      'Yield Pool Early Access',
+      'Advanced AI Intelligence',
+      'Whale Movement Alerts',
+      'Priority Signal Stream',
+      'Custom Watchlist Limits',
+      'Noble Badge Status'
     ],
-    buttonText: 'Claim Gold Title',
+    icon: <Zap className="w-6 h-6 text-amber-500" />,
+    buttonText: 'Upgrade to Noble',
+    buttonHref: '/api/stripe/checkout?priceId=noble',
     highlight: true,
-    color: 'gold',
-    icon: <Star className="w-8 h-8 text-yellow-500" />,
+    gradient: 'from-amber-900/20 to-[#050507]'
   },
   {
-    id: 'royal',
     name: 'Royal',
+    id: 'royal',
     price: '$99',
-    description: 'True dominion over the on-chain realm.',
+    description: 'The pinnacle of market sovereignty.',
     features: [
-      'Whale Tracking Intelligence',
-      'The Queen\'s Guard (Auto-Rebalance)',
-      'Direct Alpha Agent Research',
-      'Exclusive Yield-Hacking Tools',
-      'Direct Line to High-Lords',
+      'Institutional Data Flow',
+      'Exclusive Royal Insider Chat',
+      'Direct Alpha Reports',
+      'Private Portfolio Audit',
+      'Royal Elite Badge',
+      'Concierge AI Support'
     ],
-    buttonText: 'Ascend to Throne',
+    icon: <Crown className="w-6 h-6 text-purple-500" />,
+    buttonText: 'Claim Your Throne',
+    buttonHref: '/api/stripe/checkout?priceId=royal',
     highlight: false,
-    color: 'purple',
-    icon: <Crown className="w-8 h-8 text-purple-500" />,
-  },
+    gradient: 'from-purple-900/20 to-[#050507]'
+  }
 ]
 
 export default function PricingPage() {
-  const [loading, setLoading] = useState<string | null>(null)
-
-  const handleSubscription = async (tier: string) => {
-    if (tier === 'citizen') return
-
-    setLoading(tier)
-    try {
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tier }),
-      })
-
-      const data = await response.json()
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch (error) {
-      console.error('Kingdom upgrade failed:', error)
-    } finally {
-      setLoading(null)
-    }
-  }
+  const { data: session } = useSession()
 
   return (
-    <div className="min-h-screen bg-[#0F051D] text-white">
-      <Header />
-      
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[150px] rounded-full" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-yellow-600/5 blur-[150px] rounded-full" />
+    <div className="min-h-screen bg-[#050507] py-24 px-4 relative overflow-hidden">
+      {/* Signature Monogram Background */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10 L45 25 L60 25 L48 35 L52 50 L40 40 L28 50 L32 35 L20 25 L35 25 Z' fill='%23FFD76C'/%3E%3C/svg%3E")`,
+            backgroundSize: '120px 120px',
+          }}
+        />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-24">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
-        <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 gold-text uppercase">
+        <div className="text-center mb-24">
+          <div className="inline-block px-4 py-1 border border-amber-500/30 rounded-full mb-6">
+            <span className="text-[10px] font-bold tracking-[0.4em] text-amber-500 uppercase">
+              Subscription Tiers
+            </span>
+          </div>
+          <h1 className="text-6xl md:text-8xl font-light tracking-[0.2em] mb-6 text-white uppercase font-serif luxury-text">
             kryptotrac
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-medium">
-            Master the data. Trace the wealth. 
-            Choose the precision tier that fits your institutional ambition.
+          <p className="text-sm md:text-base font-light tracking-[0.5em] text-gray-400 uppercase max-w-2xl mx-auto">
+            Select your rank in the global network.
           </p>
         </div>
 
-        {/* Tiers Grid */}
+        {/* Pricing Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {tiers.map((tier) => (
+          {TIERS.map((tier) => (
             <div
-              key={tier.name}
-              className={`relative rounded-[2.5rem] p-8 transition-all duration-500 group hover:scale-[1.02] flex flex-col ${
-                tier.highlight 
-                ? 'bg-gradient-to-b from-white/10 to-transparent border-2 border-yellow-500/50 shadow-[0_30px_60px_-15px_rgba(244,196,48,0.2)]'
-                : 'bg-white/5 border border-white/10 hover:border-white/20'
+              key={tier.id}
+              className={`relative group p-1 rounded-[2.5rem] transition-all duration-700 hover:scale-[1.02] ${
+                tier.highlight ? 'bg-gradient-to-b from-amber-500/50 via-amber-900/10 to-transparent shadow-[0_30px_100px_rgba(251,191,36,0.1)]' : 'bg-white/5'
               }`}
             >
-              {tier.highlight && (
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-yellow-500 text-[#0F051D] text-[10px] font-black uppercase tracking-[0.2em] px-6 py-2 rounded-full shadow-lg">
-                  Most Coveted
+              <div className={`h-full rounded-[2.4rem] p-10 bg-gradient-to-b ${tier.gradient} backdrop-blur-xl flex flex-col`}>
+                <div className="flex items-center justify-between mb-8">
+                  <div className="p-3 rounded-2xl bg-black/40 border border-white/5">
+                    {tier.icon}
+                  </div>
+                  {tier.highlight && (
+                    <span className="text-[10px] font-black tracking-widest text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full uppercase">
+                      Most Precise
+                    </span>
+                  )}
                 </div>
-              )}
 
-              <div className="mb-8">
-                <div className="mb-4 inline-block p-4 rounded-2xl bg-white/5 group-hover:bg-white/10 transition-colors">
-                  {tier.icon}
-                </div>
-                <h3 className={`text-2xl font-black uppercase tracking-widest ${
-                  tier.color === 'gold' ? 'text-yellow-500' : tier.color === 'purple' ? 'text-purple-500' : 'text-gray-400'
-                }`}>
+                <h3 className="text-3xl font-serif tracking-widest text-white uppercase mb-2">
                   {tier.name}
                 </h3>
-                <div className="flex items-baseline gap-1 mt-4">
-                  <span className="text-5xl font-black tracking-tight">{tier.price}</span>
-                  <span className="text-gray-500 font-bold uppercase text-xs tracking-widest">/ Month</span>
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-5xl font-light text-white tracking-tighter">{tier.price}</span>
+                  <span className="text-gray-500 text-sm tracking-widest uppercase">/mo</span>
                 </div>
-                <p className="mt-4 text-gray-400 font-medium text-sm leading-relaxed">
+
+                <p className="text-gray-400 text-sm font-medium mb-10 tracking-wide">
                   {tier.description}
                 </p>
-              </div>
 
-              <div className="space-y-4 mb-10 flex-grow">
-                {tier.features.map((feature) => (
-                  <div key={feature} className="flex items-start gap-3">
-                    <div className={`mt-1 rounded-full p-1 ${
-                      tier.color === 'gold' ? 'bg-yellow-500/10' : tier.color === 'purple' ? 'bg-purple-500/10' : 'bg-white/10'
-                    }`}>
-                      <Check className={`w-3 h-3 ${
-                        tier.color === 'gold' ? 'text-yellow-500' : tier.color === 'purple' ? 'text-purple-500' : 'text-white'
-                      }`} />
+                <div className="space-y-5 mb-12 flex-grow">
+                  {tier.features.map((feature) => (
+                    <div key={feature} className="flex items-center gap-4 group/item">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/item:border-amber-500/30 transition-colors">
+                        <Check className="w-3 h-3 text-amber-500" />
+                      </div>
+                      <span className="text-sm text-gray-300 font-light tracking-wide">{feature}</span>
                     </div>
-                    <span className="text-sm font-semibold text-gray-300">{feature}</span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <button
-                onClick={() => handleSubscription(tier.id)}
-                disabled={loading !== null}
-                className={`block w-full text-center py-4 rounded-2xl font-black uppercase tracking-widest transition-all ${
-                  tier.highlight
-                  ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black shadow-[0_10px_20px_rgba(234,179,8,0.3)] hover:shadow-[0_15px_30px_rgba(234,179,8,0.5)] active:scale-[0.98]'
-                  : 'bg-white/10 hover:bg-white/20 text-white active:scale-[0.98]'
-                } disabled:opacity-50`}
-              >
-                {loading === tier.id ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                    Summoning...
-                  </div>
-                ) : tier.buttonText}
-              </button>
+                <Link 
+                  href={tier.buttonHref}
+                  className="w-full"
+                >
+                  <button className={`w-full py-5 rounded-2xl text-[11px] font-black tracking-[0.3em] uppercase transition-all duration-500 ${
+                    tier.highlight 
+                      ? 'bg-amber-500 text-black hover:bg-white' 
+                      : 'bg-white/5 text-white border border-white/10 hover:bg-white hover:text-black'
+                  }`}>
+                    {tier.buttonText}
+                  </button>
+                </Link>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Comparison Trust Section */}
+        {/* Bottom Guarantee */}
         <div className="mt-24 text-center">
-          <p className="text-gray-500 flex items-center justify-center gap-2 font-bold uppercase text-[10px] tracking-[0.3em] mb-4">
-            <Zap className="w-3 h-3 text-yellow-500 fill-yellow-500" /> Powered by Ethereum Mainnet Security
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-12 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-            <span className="text-xl font-black tracking-tighter">METAMASK</span>
-            <span className="text-xl font-black tracking-tighter">STRIPE</span>
-            <span className="text-xl font-black tracking-tighter">ALCHEMY</span>
-            <span className="text-xl font-black tracking-tighter">UNISWAP</span>
-          </div>
+            <p className="text-[9px] tracking-[0.8em] text-white/20 uppercase font-bold">
+              Institutional Grade Security — SSL ENCRYPTED
+            </p>
         </div>
       </div>
+
+      <style jsx global>{`
+        .luxury-text {
+          font-family: 'Times New Roman', serif;
+          background: linear-gradient(180deg, #FFFFFF 30%, #FFD76C 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+      `}</style>
     </div>
   )
 }

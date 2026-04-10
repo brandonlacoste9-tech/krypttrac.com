@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { MiniChart } from './MiniChart'
-import { Coins } from 'lucide-react'
+import { Coins, ChevronRight, Activity } from 'lucide-react'
 import Link from 'next/link'
 
 export type RoyalAssetRow = {
@@ -26,81 +26,79 @@ type RoyalAssetsProps = {
 export function RoyalAssets({ assets, loading, error, onRetry }: RoyalAssetsProps) {
   if (loading) {
     return (
-      <div className="px-6 my-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="h-7 w-40 bg-white/10 rounded animate-pulse" />
-          <div className="h-4 w-16 bg-white/10 rounded animate-pulse" />
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-4">
+          <div className="h-6 w-32 bg-white/5 rounded animate-pulse" />
         </div>
-        <div className="space-y-3">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-20 rounded-xl bg-white/5 animate-pulse" />
-          ))}
-        </div>
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-24 rounded-3xl bg-white/5 animate-pulse border border-white/5" />
+        ))}
       </div>
     )
   }
 
   if (error && assets.length === 0) {
     return (
-      <div className="px-6 my-6">
-        <h3 className="text-xl font-bold gold-text mb-4">Royal Assets</h3>
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-6 text-center">
-          <p className="text-red-200 text-sm mb-4">{error}</p>
-          {onRetry ? (
-            <button
-              type="button"
-              onClick={onRetry}
-              className="text-sm font-semibold text-yellow-400 hover:text-yellow-300"
-            >
-              Retry
-            </button>
-          ) : null}
-        </div>
+      <div className="p-8 text-center rounded-3xl bg-white/5 border border-white/5">
+        <p className="text-amber-500 text-xs tracking-[0.3em] uppercase mb-4">{error}</p>
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="text-[10px] font-black tracking-[0.2em] text-white uppercase border border-white/10 px-6 py-2 rounded-full hover:bg-white hover:text-black transition-all"
+          >
+            Reconnect Stream
+          </button>
+        )}
       </div>
     )
   }
 
   return (
-    <div className="px-6 my-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold gold-text">Royal Assets</h3>
-        <Link href="/markets" className="text-sm text-yellow-400 hover:text-yellow-300 transition font-medium">
-          See all
+    <div className="space-y-6">
+      <div className="flex items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+           <Activity className="w-4 h-4 text-amber-500" />
+           <h3 className="text-xl font-serif tracking-widest text-white uppercase">Trac Assets</h3>
+        </div>
+        <Link href="/markets" className="text-[10px] font-black tracking-[0.3em] text-amber-500/60 hover:text-amber-500 transition-colors uppercase">
+          Full Market
         </Link>
       </div>
 
       <div className="space-y-3">
         {assets.map((asset) => (
-          <div key={asset.id} className="royal-asset-bar">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3 min-w-0">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 overflow-hidden relative"
-                  style={{
-                    background: 'linear-gradient(135deg, #FFD76C, #C49A2B)',
-                  }}
-                >
+          <div 
+            key={asset.id} 
+            className="group relative p-4 rounded-3xl bg-[#0C0C0E]/40 border border-white/5 hover:border-amber-500/30 transition-all duration-500"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4 min-w-0">
+                <div className="relative w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center overflow-hidden border border-white/10 group-hover:scale-110 transition-transform duration-500">
                   {asset.image ? (
-                    <Image src={asset.image} alt="" width={40} height={40} className="object-cover" />
+                    <Image src={asset.image} alt="" fill className="object-cover opacity-80 group-hover:opacity-100" />
                   ) : (
-                    <Coins className="w-5 h-5 text-purple-950" strokeWidth={2.5} />
+                    <Coins className="w-6 h-6 text-amber-500/40" />
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-bold text-white truncate">{asset.name}</p>
-                  <p className="text-xs text-gray-400">{asset.symbol}</p>
+                  <p className="font-serif text-lg tracking-wide text-white group-hover:text-amber-500 transition-colors">{asset.name}</p>
+                  <p className="text-[10px] font-black tracking-[0.2em] text-gray-500 uppercase">{asset.symbol}</p>
                 </div>
               </div>
 
-              <div className="flex-1 flex justify-center max-w-[100px]">
+              <div className="flex-1 px-4 hidden sm:block">
                 <MiniChart data={asset.chartData} isPositive={asset.isPositive} />
               </div>
 
               <div className="text-right shrink-0">
-                <p className="font-bold gold-text text-sm">{asset.price}</p>
-                <p className={`text-xs font-semibold ${asset.isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                <p className="text-lg font-light tracking-tighter text-white tabular-nums">{asset.price}</p>
+                <p className={`text-[10px] font-black tracking-widest uppercase ${asset.isPositive ? 'text-cyan-400' : 'text-red-400'}`}>
                   {asset.changePercent}
                 </p>
+              </div>
+              
+              <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-2 group-hover:translate-x-0">
+                <ChevronRight className="w-4 h-4 text-amber-500" />
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Mail, Lock, User, Crown, Github, Chrome } from 'lucide-react'
+import { Mail, Lock, User, Shield, Github, Chrome, Satellite, ArrowRight } from 'lucide-react'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -19,8 +19,6 @@ export default function SignUpPage() {
     setLoading(true)
     setError('')
 
-    // In this NextAuth pattern, we leverage the CredentialsProvider's 
-    // ability to auto-create a user if they don't exist for simplicity in this build.
     try {
       const res = await signIn('credentials', {
         email,
@@ -29,122 +27,133 @@ export default function SignUpPage() {
       })
 
       if (res?.error) {
-        setError('The decree was rejected. Try a different identity.')
+        setError('Identification failed. Check entry credentials.')
       } else {
         router.push('/dashboard')
       }
     } catch (err) {
-      setError('The royal registry is currently unavailable.')
+      setError('Central registry connection error.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#1A0B2E] flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-yellow-600/10 blur-[120px] rounded-full" />
-
-      <div className="w-full max-w-md z-10">
-        {/* Logo & Header */}
-        <div className="text-center mb-8">
-          <div className="inline-block p-4 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl mb-4 group hover:scale-105 transition-transform duration-500">
-            <Image 
-              src="/kk-logo.png" 
-              width={80} 
-              height={80} 
-              alt="Krypto Kings" 
-              className="drop-shadow-[0_0_15px_rgba(255,215,108,0.4)]"
-            />
-          </div>
-          <h1 className="text-3xl font-black gold-text tracking-tighter mb-2">JOIN THE REALM</h1>
-          <p className="text-gray-400 text-sm font-medium">Your crypto empire begins here.</p>
-        </div>
-
-        {/* Auth Card */}
-        <div 
-          className="rounded-3xl p-8 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#050507] px-4">
+      {/* Universal Luxury Monogram Background */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <div
+          className="w-full h-full"
           style={{
-            background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.3), rgba(26, 11, 46, 0.6))',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10 L45 25 L60 25 L48 35 L52 50 L40 40 L28 50 L32 35 L20 25 L35 25 Z' fill='%23FFD76C'/%3E%3C/svg%3E")`,
+            backgroundSize: '120px 120px',
           }}
-        >
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs py-3 px-4 rounded-xl mb-6 flex items-center gap-2">
-              {error}
-            </div>
-          )}
+        />
+      </div>
 
-          <form onSubmit={handleSignUp} className="space-y-5">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em] ml-1">Imperial Email</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="king@kryptokings.com"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 transition-all font-medium"
-                  required
-                />
+      <div className="relative z-10 w-full max-w-md my-12">
+        {/* Branding */}
+        <div className="text-center mb-10">
+           <Link href="/" className="inline-block transition-transform duration-500 hover:scale-105 mb-6">
+              <div className="p-4 rounded-[2rem] bg-white/5 border border-white/10 shadow-2xl">
+                 <Image src="/kk-logo.png" width={56} height={56} alt="krypttrac" className="animate-float" />
               </div>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em] ml-1">Master Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 transition-all font-medium"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-yellow-500/5 border border-yellow-500/10 mb-4">
-                <Crown className="w-4 h-4 text-yellow-500" />
-                <span className="text-[10px] font-bold text-yellow-500/80 uppercase tracking-widest">Initial Access: Free Tier</span>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#FFD76C] via-[#F4C430] to-[#C49A2B] text-[#1A0B2E] font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(244,196,48,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 mt-2"
-            >
-              {loading ? 'Registering...' : 'Claim My Throne'}
-            </button>
-          </form>
-
-          {/* Footer Link */}
-          <div className="flex items-center gap-4 my-8">
-            <div className="h-[1px] flex-1 bg-white/10" />
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">Or quick join</span>
-            <div className="h-[1px] flex-1 bg-white/10" />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <button onClick={() => signIn('google')} className="flex items-center justify-center gap-3 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-              <Chrome className="w-5 h-5 text-gray-400" />
-              <span className="text-xs font-bold text-gray-300">Google</span>
-            </button>
-            <button onClick={() => signIn('github')} className="flex items-center justify-center gap-3 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-              <Github className="w-5 h-5 text-gray-400" />
-              <span className="text-xs font-bold text-gray-300">GitHub</span>
-            </button>
-          </div>
+           </Link>
+           <h1 className="text-4xl font-serif tracking-[0.2em] text-white uppercase mb-2">Initialize</h1>
+           <div className="flex items-center justify-center gap-2">
+              <Shield className="w-3 h-3 text-amber-500" />
+              <p className="text-[10px] font-black tracking-[0.4em] text-gray-500 uppercase">Sovereign Asset Registration</p>
+           </div>
         </div>
 
-        <p className="text-center mt-8 text-sm text-gray-500 font-medium">
-          Already a citizen? <Link href="/sign-in" className="text-yellow-500/80 hover:text-yellow-400 font-bold underline-offset-4 hover:underline transition-all">Sign in here</Link>
+        {/* The Registration Card */}
+        <div className="rounded-[2.5rem] bg-[#0C0C0E]/80 backdrop-blur-3xl border border-white/10 p-10 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
+           {error && <p className="bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold tracking-widest text-center uppercase p-3 rounded-xl mb-6">{error}</p>}
+
+           <form onSubmit={handleSignUp} className="space-y-6">
+              <div className="space-y-2">
+                 <label className="text-[9px] font-black tracking-[0.3em] text-gray-400 uppercase px-1">Email Terminal</label>
+                 <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600 group-focus-within:text-amber-500 transition-colors" />
+                    <input
+                      type="email"
+                      required
+                      placeholder="noble@kryptotrac.com"
+                      className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-amber-500/50 focus:bg-white/10 transition-all font-medium"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                 </div>
+              </div>
+
+              <div className="space-y-2">
+                 <label className="text-[9px] font-black tracking-[0.3em] text-gray-400 uppercase px-1">Security Key</label>
+                 <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600 group-focus-within:text-amber-500 transition-colors" />
+                    <input
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-amber-500/50 focus:bg-white/10 transition-all font-medium"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                 </div>
+              </div>
+
+              <div className="pt-2">
+                 <div className="flex items-center gap-3 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center">
+                       <Satellite className="w-4 h-4 text-amber-500" />
+                    </div>
+                    <div>
+                       <p className="text-[9px] font-black tracking-[0.2em] text-amber-500 uppercase">Initial Clearance</p>
+                       <p className="text-[10px] text-gray-500 font-medium">Standard Citizen Access (Elevate post-init)</p>
+                    </div>
+                 </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-white text-black py-4 rounded-2xl font-black text-[11px] tracking-[0.3em] uppercase hover:bg-amber-500 transition-all duration-500 flex items-center justify-center gap-2 group disabled:opacity-50 mt-4"
+              >
+                {loading ? 'Initializing...' : 'Confirm Registration'}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+           </form>
+
+           <div className="relative my-10 text-center">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5"></div></div>
+              <span className="relative px-4 bg-transparent text-[8px] font-black tracking-[0.5em] text-gray-600 uppercase">Direct Protocol</span>
+           </div>
+
+           <div className="grid grid-cols-2 gap-4">
+              <button onClick={() => signIn('google')} className="flex items-center justify-center gap-3 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                 <Chrome className="w-4 h-4 text-gray-400" />
+                 <span className="text-[9px] font-black tracking-widest text-gray-300 uppercase">Google</span>
+              </button>
+              <button onClick={() => signIn('github')} className="flex items-center justify-center gap-3 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                 <Github className="w-4 h-4 text-gray-400" />
+                 <span className="text-[9px] font-black tracking-widest text-gray-300 uppercase">GitHub</span>
+              </button>
+           </div>
+        </div>
+
+        <p className="mt-8 text-center text-[10px] font-medium tracking-[0.2em] text-gray-600 uppercase">
+           Already within the network? <Link href="/sign-in" className="text-amber-500/80 hover:text-amber-400 transition-colors underline underline-offset-4">Authenticate Portal</Link>
         </p>
       </div>
+
+      <style jsx global>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   )
 }
