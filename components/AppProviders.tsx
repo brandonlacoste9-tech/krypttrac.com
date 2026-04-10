@@ -4,10 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider, createConfig, http } from 'wagmi'
 import { mainnet, base, arbitrum, optimism } from 'wagmi/chains'
 import { injected } from 'wagmi/connectors'
-import { useState, type ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import { ThemeProvider } from './ThemeProvider'
 
-// Create config outside to prevent recreation
 const config = createConfig({
   chains: [mainnet, base, arbitrum, optimism],
   connectors: [injected()],
@@ -21,8 +20,16 @@ const config = createConfig({
 })
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  // Initialize QueryClient once
   const [queryClient] = useState(() => new QueryClient())
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-[#1A0B2E]" />
+  }
 
   return (
     <WagmiProvider config={config}>

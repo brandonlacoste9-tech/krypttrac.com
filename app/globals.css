@@ -244,3 +244,8 @@
     animation: shine 3s linear infinite;
   }
 }
+
+/* Force visibility for elements hidden by Clerk/Hydration */
+[style*="visibility:hidden"] {
+  visibility: visible !important;
+}

@@ -19,14 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="theme-royal">
-        <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+      <html lang="en">
+        <body className="theme-royal">
           <AppProviders>
             {children}
           </AppProviders>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
