@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function SplashScreen() {
   return (
@@ -44,11 +45,22 @@ export default function SplashScreen() {
         </div>
 
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/dashboard" className="w-full sm:w-auto">
-            <span className="block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer bg-gradient-to-r from-[#FFD76C] to-[#C49A2B] text-[#1A0B2E] shadow-[0_8px_32px_rgba(255,215,108,0.3)]">
-              Enter the Realm
-            </span>
-          </Link>
+          <SignedIn>
+            <Link href="/dashboard" className="w-full sm:w-auto">
+              <span className="block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer bg-gradient-to-r from-[#FFD76C] to-[#C49A2B] text-[#1A0B2E] shadow-[0_8px_32px_rgba(255,215,108,0.3)]">
+                Command Center
+              </span>
+            </Link>
+          </SignedIn>
+          
+          <SignedOut>
+            <Link href="/sign-in" className="w-full sm:w-auto">
+              <span className="block px-12 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer bg-gradient-to-r from-[#FFD76C] to-[#C49A2B] text-[#1A0B2E] shadow-[0_8px_32px_rgba(255,215,108,0.3)]">
+                Join the Realm
+              </span>
+            </Link>
+          </SignedOut>
+
           <Link href="/markets" className="w-full sm:w-auto">
             <span className="block px-10 py-4 rounded-full font-bold text-lg tracking-wide uppercase transition-all duration-300 hover:scale-105 text-center cursor-pointer border-2 border-[#FFD76C]/40 text-[#FFD76C]">
               Markets

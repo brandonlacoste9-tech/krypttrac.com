@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { formatPct, formatUsd } from '@/lib/dashboard-context'
 import type { DashboardSnapshot } from '@/lib/server/market-fetch'
 import { TrendingDown, TrendingUp } from 'lucide-react'
@@ -32,17 +33,27 @@ export function MarketsView() {
     <div className="min-h-screen pb-12">
       <header className="flex flex-wrap items-center justify-between gap-4 px-4 py-4 max-w-5xl mx-auto border-b border-white/10">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/kk-logo.png" width={40} height={40} alt="" className="rounded-lg" />
-          <span className="font-bold tracking-wide gold-text">KRYPTO KINGS</span>
+          <Image src="/kk-logo.png" width={40} height={40} alt="" className="rounded-lg shadow-[0_0_15px_rgba(255,215,108,0.2)]" />
+          <span className="font-bold tracking-tighter gold-text text-xl">KRYPTO KINGS</span>
         </Link>
         <div className="flex items-center gap-3">
-          {/* Clerk auth temporarily disabled */}
-          <Link
-            href="/dashboard"
-            className="text-sm font-medium text-gray-300 hover:text-white transition mr-2"
-          >
-            Dashboard
-          </Link>
+          <SignedOut>
+            <Link
+              href="/sign-in"
+              className="text-sm font-bold uppercase tracking-widest text-[#FFD76C] hover:text-white transition-all px-4 py-2 border border-[#FFD76C]/30 rounded-full"
+            >
+              Sign in
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <Link
+              href="/dashboard"
+              className="text-sm font-bold uppercase tracking-widest text-gray-300 hover:text-white transition mr-2"
+            >
+              Dashboard
+            </Link>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </div>
       </header>
 
@@ -61,7 +72,7 @@ export function MarketsView() {
         ) : !snap?.markets?.length ? (
           <p className="text-red-300 text-sm">{snap?.error || 'No market data.'}</p>
         ) : (
-          <div className="rounded-2xl overflow-hidden backdrop-blur-md"
+          <div className="rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl"
                style={{
                  background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.25), rgba(26, 11, 46, 0.4))',
                  border: '1px solid rgba(255, 215, 108, 0.15)'
@@ -89,7 +100,7 @@ export function MarketsView() {
                           ) : null}
                           <div>
                             <div className="font-bold text-gray-100">{m.name}</div>
-                            <div className="text-xs text-yellow-500/70 font-mono tracking-widest">{m.symbol}</div>
+                            <div className="text-xs text-yellow-500/70 font-mono tracking-widest uppercase">{m.symbol}</div>
                           </div>
                         </div>
                       </td>

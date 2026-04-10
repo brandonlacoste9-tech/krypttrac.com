@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { ClerkProvider } from '@clerk/nextjs'
 import { AppProviders } from '@/components/AppProviders'
 
 export const dynamic = 'force-dynamic'
@@ -18,12 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="theme-royal">
-        <AppProviders>
-          {children}
-        </AppProviders>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className="theme-royal">
+          <AppProviders>
+            {children}
+          </AppProviders>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
