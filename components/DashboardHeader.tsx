@@ -1,6 +1,6 @@
 'use client'
 
-import { Bell, User, LogOut } from 'lucide-react'
+import { Bell, User, LogOut, Crown } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,73 +11,65 @@ export function DashboardHeader() {
   const tier = user?.tier || 'free'
   
   return (
-    <header className="flex items-center justify-between px-6 py-4">
+    <header className="flex items-center justify-between px-6 py-6">
       {/* Left - User Profile */}
-      <div className="flex items-center gap-3">
-        {/* Lion Head Icon / User Avatar */}
-        <div 
-          className="w-12 h-12 rounded-full flex items-center justify-center p-0.5"
-          style={{
-            background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.4), rgba(26, 11, 46, 0.6))',
-            border: '2px solid rgba(255, 215, 108, 0.3)',
-          }}
-        >
-          {user?.image ? (
-            <Image 
-              src={user.image} 
-              alt="Profile" 
-              width={48} 
-              height={48} 
-              className="rounded-full"
-            />
-          ) : (
-            <User className="w-6 h-6 text-yellow-400" />
-          )}
+      <div className="flex items-center gap-4">
+        {/* User Avatar */}
+        <div className="relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500/30 to-cyan-500/30 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div 
+            className="relative w-12 h-12 rounded-full flex items-center justify-center overflow-hidden border-2 border-white/10 bg-white/5"
+          >
+            {user?.image ? (
+              <Image 
+                src={user.image} 
+                alt="Profile" 
+                width={48} 
+                height={48} 
+                className="rounded-full"
+              />
+            ) : (
+              <User className="w-5 h-5 text-amber-500/70" />
+            )}
+          </div>
         </div>
 
-        {/* Platinum Subscriber Badge */}
-        {tier === 'platinum' && (
-          <div 
-            className="px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5"
-            style={{
-              background: 'linear-gradient(135deg, rgba(77, 168, 218, 0.3), rgba(10, 22, 40, 0.5))',
-              border: '2px solid rgba(232, 244, 248, 0.3)',
-              color: '#E8F4F8',
-            }}
-          >
-            <div className="w-2 h-2 rounded-full bg-blue-300 shadow-[0_0_8px_rgba(147,197,253,0.5)]" />
-            Platinum Subscriber
+        {/* Tier Badge */}
+        {tier !== 'free' && (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5">
+            <Crown className="w-3 h-3 text-amber-500" />
+            <span className="text-[9px] font-black tracking-[0.3em] text-amber-500/80 uppercase">
+              {tier}
+            </span>
           </div>
         )}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <Link
           href="/markets"
-          className="hidden sm:inline text-xs font-semibold text-yellow-400/90 hover:text-yellow-300 transition mr-2 uppercase tracking-widest"
+          className="hidden sm:inline text-[10px] font-black tracking-[0.3em] text-amber-500/60 hover:text-amber-500 transition-colors uppercase mr-2"
         >
           Markets
         </Link>
+
+        {/* Notifications */}
         <button
           type="button"
           title="Alerts coming soon"
-          className="relative w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-          style={{
-            background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.4), rgba(26, 11, 46, 0.6))',
-            border: '2px solid rgba(255, 215, 108, 0.3)',
-          }}
+          className="relative w-11 h-11 rounded-full flex items-center justify-center bg-white/5 border border-white/5 hover:border-amber-500/20 transition-all duration-300"
         >
-          <Bell className="w-6 h-6 text-yellow-400" />
-          <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-purple-950 shadow-lg" />
+          <Bell className="w-5 h-5 text-gray-400" />
+          <div className="absolute top-2 right-2 w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
         </button>
         
         {/* Logout Button */}
         <button
           onClick={() => signOut({ callbackUrl: '/' })}
-          className="w-10 h-10 rounded-full flex items-center justify-center text-yellow-400 hover:text-yellow-200 transition-colors"
+          className="w-11 h-11 rounded-full flex items-center justify-center bg-white/5 border border-white/5 hover:border-red-500/20 text-gray-500 hover:text-red-400 transition-all duration-300"
           title="Sign Out"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-4 h-4" />
         </button>
       </div>
     </header>

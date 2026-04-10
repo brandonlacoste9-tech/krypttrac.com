@@ -19,7 +19,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true)
-    const saved = localStorage.getItem('kk-theme') as Theme
+    const saved = localStorage.getItem('kt-theme') as Theme
     if (saved && saved === 'royal') {
       setThemeState(saved)
     }
@@ -28,12 +28,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!mounted) return
     document.body.className = `theme-${theme}`
-    localStorage.setItem('kk-theme', theme)
+    localStorage.setItem('kt-theme', theme)
   }, [theme, mounted])
 
   const setTheme = (newTheme: Theme) => {
     if (newTheme === 'platinum' && !canUsePlatinum) {
-      alert('🔒 Platinum Suite is exclusive to Platinum Kings!')
+      alert('🔒 Platinum Suite is exclusive to Royal tier subscribers.')
       return
     }
     setThemeState(newTheme)

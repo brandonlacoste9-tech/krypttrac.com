@@ -29,7 +29,7 @@ export function QuickActions() {
             >
               <action.icon 
                 className="w-6 h-6"
-                style={{ color: '#1A0B2E' }}
+                style={{ color: '#050507' }}
                 strokeWidth={3}
               />
             </button>

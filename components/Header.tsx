@@ -3,7 +3,7 @@
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { LayoutGrid, Menu, X, LogIn, Satellite, Shield } from 'lucide-react'
+import { Menu, X, Satellite, Shield } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Header() {
@@ -38,18 +38,13 @@ export default function Header() {
         <div className="hidden md:flex items-center gap-6">
           {session ? (
             <>
-              <Link 
+              <Link
                 href="/dashboard"
                 className="flex items-center gap-3 py-3 px-6 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-black uppercase tracking-[0.3em] transition-all"
-              ) : (
+              >
                 <div className="p-2 rounded-full border border-cyan-500/30 bg-cyan-500/10">
                    <Satellite className="w-3 h-3 text-cyan-400 animate-pulse" />
                 </div>
-              )}
-              <Link 
-                href="/dashboard"
-                className="text-[10px] font-black tracking-[0.3em] uppercase text-white hover:text-amber-500"
-              >
                 Dashboard
               </Link>
               <button 

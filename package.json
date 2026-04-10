@@ -1,8 +1,8 @@
 {
-  "name": "krypto-kings",
+  "name": "kryptotrac",
   "version": "0.1.0",
-  "description": "Krypto Kings - Built for Kings 👑",
-  "homepage": "https://kryptokings.app",
+  "description": "kryptotrac — Precision Intelligence for Digital Assets",
+  "homepage": "https://kryptotrac.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/brandonlacoste9-tech/krypttrac.git"

@@ -88,11 +88,11 @@ export function PortfolioBreakdown() {
   return (
     <div className="px-6 my-8">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-white tracking-wide">
+        <h3 className="text-[11px] font-black tracking-[0.3em] text-white uppercase">
           <span className="gold-text">Connected</span> Realms
         </h3>
-        <button className="text-sm text-yellow-500 font-medium hover:text-yellow-400 transition-colors flex items-center">
-          Manage <ChevronRight className="w-4 h-4 ml-1" />
+        <button className="text-[9px] font-black tracking-[0.3em] text-amber-500/60 hover:text-amber-500 transition-colors flex items-center uppercase">
+          Manage <ChevronRight className="w-3 h-3 ml-1" />
         </button>
       </div>
 
@@ -100,26 +100,16 @@ export function PortfolioBreakdown() {
         {displayConnections.map((conn) => (
           <div 
             key={conn.id}
-            className="p-4 rounded-2xl flex items-center justify-between group cursor-pointer"
-            style={{
-              background: 'linear-gradient(135deg, rgba(74, 21, 128, 0.25), rgba(26, 11, 46, 0.4))',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 215, 108, 0.1)',
-              transition: 'all 0.3s ease'
-            }}
+            className="p-4 rounded-2xl flex items-center justify-between group cursor-pointer bg-white/[0.03] backdrop-blur-xl border border-white/5 hover:border-amber-500/20 transition-all duration-300 hover:-translate-y-0.5"
           >
             <div className="flex items-center gap-4">
               <div 
-                className="w-12 h-12 rounded-xl flex items-center justify-center relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255, 215, 108, 0.1), transparent)',
-                  border: '1px solid rgba(255, 215, 108, 0.2)'
-                }}
+                className="w-12 h-12 rounded-xl flex items-center justify-center relative overflow-hidden bg-white/5 border border-white/5"
               >
                 {conn.type === 'wallet' ? (
-                  <Wallet className="w-5 h-5 text-yellow-500 relative z-10" />
+                  <Wallet className="w-5 h-5 text-amber-500 relative z-10" />
                 ) : (
-                  <Building2 className="w-5 h-5 text-yellow-500 relative z-10" />
+                  <Building2 className="w-5 h-5 text-amber-500 relative z-10" />
                 )}
                 <div className="absolute inset-0 metallic-shine opacity-10" style={{ background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent)' }} />
               </div>
@@ -144,11 +134,7 @@ export function PortfolioBreakdown() {
 
         <button 
           onClick={() => isConnected ? disconnect() : connect({ connector: injected() })}
-          className="w-full mt-2 py-4 rounded-xl border border-dashed text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
-          style={{
-            borderColor: 'rgba(255, 215, 108, 0.3)',
-            color: '#F4C430'
-          }}
+          className="w-full mt-2 py-4 rounded-xl border border-dashed text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-2 transition-all border-amber-500/20 text-amber-500 hover:bg-amber-500/5 hover:border-amber-500/40"
         >
           <Wallet className="w-4 h-4" /> {mounted && isConnected ? 'Disconnect Wallet' : 'Connect Web3 Wallet'}
         </button>
