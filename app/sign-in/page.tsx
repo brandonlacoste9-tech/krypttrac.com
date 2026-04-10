@@ -52,12 +52,12 @@ export default function SignInPage() {
               src="/kk-logo.png" 
               width={80} 
               height={80} 
-              alt="Krypto Kings" 
+              alt="kryptotrac.com" 
               className="drop-shadow-[0_0_15px_rgba(255,215,108,0.4)]"
             />
           </div>
-          <h1 className="text-3xl font-black gold-text tracking-tighter mb-2">KINGDOM ACCESS</h1>
-          <p className="text-gray-400 text-sm font-medium">Claim your throne and rule your assets.</p>
+          <h1 className="text-3xl font-black gold-text tracking-tighter mb-2">KRYPTOTRAC ACCESS</h1>
+          <p className="text-gray-400 text-sm font-medium">Trace your assets with surgical precision.</p>
         </div>
 
         {/* Auth Card */}
@@ -83,7 +83,7 @@ export default function SignInPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="king@kryptokings.com"
+                  placeholder="user@kryptotrac.com"
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition-all font-medium"
                   required
                 />

@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
             data: {
               email: credentials.email,
               name: credentials.email.split('@')[0],
-              tier: 'free'
+              tier: 'citizen'
             }
           })
         }
@@ -60,17 +60,20 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update" && session?.tier) {
+        token.tier = session.tier
+      }
+
+      if (user) {
+        token.id = user.id
+      }
+
       const dbUser = await prisma.user.findFirst({
         where: { email: token.email },
       })
 
-      if (!dbUser) {
-        if (user) {
-          token.id = user.id
-        }
-        return token
-      }
+      if (!dbUser) return token
 
       return {
         id: dbUser.id,
