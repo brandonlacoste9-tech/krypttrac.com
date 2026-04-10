@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { useSession, signOut } from 'next-auth/react'
 import { formatPct, formatUsd } from '@/lib/dashboard-context'
 import type { DashboardSnapshot } from '@/lib/server/market-fetch'
-import { TrendingDown, TrendingUp } from 'lucide-react'
+import { TrendingDown, TrendingUp, LogOut } from 'lucide-react'
 
 export function MarketsView() {
+  const { data: session, status } = useSession()
   const [snap, setSnap] = useState<DashboardSnapshot | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -37,23 +38,30 @@ export function MarketsView() {
           <span className="font-bold tracking-tighter gold-text text-xl">KRYPTO KINGS</span>
         </Link>
         <div className="flex items-center gap-3">
-          <SignedOut>
+          {status === 'unauthenticated' ? (
             <Link
               href="/sign-in"
               className="text-sm font-bold uppercase tracking-widest text-[#FFD76C] hover:text-white transition-all px-4 py-2 border border-[#FFD76C]/30 rounded-full"
             >
               Sign in
             </Link>
-          </SignedOut>
-          <SignedIn>
-            <Link
-              href="/dashboard"
-              className="text-sm font-bold uppercase tracking-widest text-gray-300 hover:text-white transition mr-2"
-            >
-              Dashboard
-            </Link>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
+          ) : status === 'authenticated' ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm font-bold uppercase tracking-widest text-gray-300 hover:text-white transition mr-2"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="w-10 h-10 rounded-full flex items-center justify-center text-yellow-400 hover:text-yellow-200 transition-colors"
+                title="Sign Out"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </>
+          ) : null}
         </div>
       </header>
 

@@ -1,13 +1,14 @@
 'use client'
 
-import { Bell, User } from 'lucide-react'
-import { useUser, UserButton } from '@clerk/nextjs'
+import { Bell, User, LogOut } from 'lucide-react'
+import { useSession, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export function DashboardHeader() {
-  const { user } = useUser()
-  const tier = (user?.publicMetadata?.tier as string) || 'free'
+  const { data: session } = useSession()
+  const user = session?.user
+  const tier = user?.tier || 'free'
   
   return (
     <header className="flex items-center justify-between px-6 py-4">
@@ -21,9 +22,9 @@ export function DashboardHeader() {
             border: '2px solid rgba(255, 215, 108, 0.3)',
           }}
         >
-          {user?.imageUrl ? (
+          {user?.image ? (
             <Image 
-              src={user.imageUrl} 
+              src={user.image} 
               alt="Profile" 
               width={48} 
               height={48} 
@@ -69,7 +70,15 @@ export function DashboardHeader() {
           <Bell className="w-6 h-6 text-yellow-400" />
           <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-purple-950 shadow-lg" />
         </button>
-        <UserButton afterSignOutUrl="/" />
+        
+        {/* Logout Button */}
+        <button
+          onClick={() => signOut({ callbackUrl: '/' })}
+          className="w-10 h-10 rounded-full flex items-center justify-center text-yellow-400 hover:text-yellow-200 transition-colors"
+          title="Sign Out"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
       </div>
     </header>
   )

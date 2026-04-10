@@ -6,6 +6,7 @@ import { mainnet, base, arbitrum, optimism } from 'wagmi/chains'
 import { injected } from 'wagmi/connectors'
 import { useState, useEffect, type ReactNode } from 'react'
 import { ThemeProvider } from './ThemeProvider'
+import { SessionProvider } from "next-auth/react"
 
 const config = createConfig({
   chains: [mainnet, base, arbitrum, optimism],
@@ -32,12 +33,14 @@ export function AppProviders({ children }: { children: ReactNode }) {
   }
 
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <SessionProvider>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </SessionProvider>
   )
 }
