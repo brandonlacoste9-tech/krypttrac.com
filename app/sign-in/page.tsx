@@ -5,24 +5,33 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, Github, ArrowRight, ShieldCheck, Satellite } from 'lucide-react'
+import { Mail, Github, Lock, ArrowRight, Satellite } from 'lucide-react'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
 
-  const handleEmailSignIn = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
     try {
-      const result = await signIn('email', { email, redirect: false })
-      if (result?.error) setError('Could not send login link.')
-      else router.push('/verify-request')
+      const result = await signIn('credentials', { 
+        email, 
+        password, 
+        redirect: false 
+      })
+      
+      if (result?.error) {
+        setError('Identification failed. Check entry credentials.')
+      } else {
+        router.push('/dashboard')
+      }
     } catch {
-      setError('An error occurred. Please try again.')
+      setError('An error occurred during authentication handshake.')
     } finally {
       setLoading(false)
     }
@@ -45,9 +54,9 @@ export default function SignInPage() {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md my-12">
         {/* Branding */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-10">
            <Link href="/" className="inline-block transition-transform duration-500 hover:scale-105 mb-8">
               <div className="p-4 rounded-[2rem] bg-white/5 border border-white/10 shadow-2xl">
                  <Image src="/kk-logo.png" width={64} height={64} alt="krypttrac" className="animate-float" />
@@ -62,7 +71,7 @@ export default function SignInPage() {
 
         {/* The Auth Card */}
         <div className="rounded-[2.5rem] bg-[#0C0C0E]/80 backdrop-blur-3xl border border-white/10 p-10 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
-           <form onSubmit={handleEmailSignIn} className="space-y-6">
+           <form onSubmit={handleSignIn} className="space-y-6">
               <div className="space-y-2">
                  <label className="text-[9px] font-black tracking-[0.3em] text-gray-400 uppercase px-1">Email Identifier</label>
                  <div className="relative group">
@@ -78,14 +87,29 @@ export default function SignInPage() {
                  </div>
               </div>
 
-              {error && <p className="text-red-400 text-[10px] font-bold tracking-widest text-center uppercase">{error}</p>}
+              <div className="space-y-2">
+                 <label className="text-[9px] font-black tracking-[0.3em] text-gray-400 uppercase px-1">Security Key</label>
+                 <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600 group-focus-within:text-amber-500 transition-colors" />
+                    <input
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-amber-500/50 focus:bg-white/10 transition-all font-medium"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                 </div>
+              </div>
+
+              {error && <p className="text-red-400 text-[10px] font-bold tracking-widest text-center uppercase border border-red-500/20 bg-red-500/5 p-3 rounded-xl">{error}</p>}
 
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full bg-white text-black py-4 rounded-2xl font-black text-[11px] tracking-[0.3em] uppercase hover:bg-amber-500 transition-all duration-500 flex items-center justify-center gap-2 group disabled:opacity-50"
               >
-                {loading ? 'Processing...' : 'Request Access Link'}
+                {loading ? 'Processing...' : 'Authenticate Access'}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
            </form>
