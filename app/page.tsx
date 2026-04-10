@@ -5,12 +5,35 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState, useRef } from 'react'
 
+interface Particle {
+  id: number
+  width: string
+  height: string
+  left: string
+  top: string
+  delay: string
+  duration: string
+}
+
 export default function SplashScreen() {
   const { status } = useSession()
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [particles, setParticles] = useState<Particle[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Generate particles once on mount to avoid impure render errors
+    const newParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      width: Math.random() * 4 + 'px',
+      height: Math.random() * 4 + 'px',
+      left: Math.random() * 100 + '%',
+      top: Math.random() * 100 + '%',
+      delay: Math.random() * 10 + 's',
+      duration: Math.random() * 20 + 10 + 's'
+    }))
+    setParticles(newParticles)
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return
       const { left, top, width, height } = containerRef.current.getBoundingClientRect()
@@ -27,30 +50,29 @@ export default function SplashScreen() {
       ref={containerRef}
       className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[#050507]"
     >
-      {/* Antigravity Signature: Interactive Layered Background */}
+      {/* Interactive Layered Background */}
       <div className="absolute inset-0 z-0">
-        {/* Deep Field */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#1A1A2E] via-[#050507] to-black opacity-60" />
         
-        {/* Floating Particles (CSS Only) */}
+        {/* Floating Particles */}
         <div className="absolute inset-0 opacity-20">
-          {[...Array(20)].map((_, i) => (
+          {particles.map((p) => (
             <div 
-              key={i}
+              key={p.id}
               className="absolute rounded-full bg-amber-500/40 blur-[1px] animate-drift"
               style={{
-                width: Math.random() * 4 + 'px',
-                height: Math.random() * 4 + 'px',
-                left: Math.random() * 100 + '%',
-                top: Math.random() * 100 + '%',
-                animationDelay: Math.random() * 10 + 's',
-                animationDuration: Math.random() * 20 + 10 + 's'
+                width: p.width,
+                height: p.height,
+                left: p.left,
+                top: p.top,
+                animationDelay: p.delay,
+                animationDuration: p.duration
               }}
             />
           ))}
         </div>
 
-        {/* The "Glass Monogram" Layer - Parallax Controlled */}
+        {/* The "Glass Monogram" Layer */}
         <div 
           className="absolute inset-0 opacity-[0.05] pointer-events-none transition-transform duration-700 ease-out"
           style={{
@@ -61,23 +83,19 @@ export default function SplashScreen() {
         />
       </div>
 
-      {/* Main Luxury Container */}
       <div className="relative z-10 text-center flex flex-col items-center max-w-4xl">
-        
-        {/* Antigravity Core: The Floating Jewel */}
         <div 
           className="relative mb-8 group transition-transform duration-500 ease-out"
           style={{
             transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px)`
           }}
         >
-          {/* Cyber Aura */}
           <div className="absolute inset-0 bg-cyan-500/10 blur-[100px] rounded-full scale-110" />
           <div className="absolute inset-0 bg-amber-500/10 blur-[100px] rounded-full scale-110 translate-x-12" />
           
           <div className="relative w-72 h-72 md:w-96 md:h-96">
             <Image
-              src="/kryptotrac_luxury_crown_1775838056747.png"
+              src="/luxury-crown.png"
               alt="kryptotrac Core"
               fill
               priority
@@ -86,7 +104,6 @@ export default function SplashScreen() {
           </div>
         </div>
 
-        {/* Typography: Luxury Serif meets Cyber Sans */}
         <div 
           className="space-y-6 transition-transform duration-300 ease-out"
           style={{
@@ -111,7 +128,6 @@ export default function SplashScreen() {
           </div>
         </div>
 
-        {/* Interactive Luxury Buttons */}
         <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-12 w-full max-w-lg">
           {status === 'authenticated' ? (
             <Link href="/dashboard" className="relative group w-full sm:w-auto">
@@ -140,7 +156,7 @@ export default function SplashScreen() {
       <style jsx global>{`
         @font-face {
           font-family: 'LuxurySerif';
-          src: local('Times New Roman'); /* Fallback to a high-class system serif */
+          src: local('Times New Roman');
         }
         .luxury-text {
           font-family: 'LuxurySerif', serif;
